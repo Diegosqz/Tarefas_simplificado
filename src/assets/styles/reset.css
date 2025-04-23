@@ -1,27 +1,88 @@
-/* https://github.com/alex-e-leon/reset-css-complete */
+/* Modern CSS Reset (inclui suporte Safari Latest) */
 
-/* General reset */
-html, body, div, span, applet, object, iframe,
-input, button, select, optgroup, textarea,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
+/* Box sizing & core resets */
+*, *::before, *::after {
+  box-sizing: border-box;
   margin: 0;
-  background: none;
   padding: 0;
-  border: 0;
-  font-size: 100%;
+}
+
+/* Remove default list styles */
+ul, ol {
+  list-style: none;
+}
+
+/* Reset typographic elements */
+body, h1, h2, h3, h4, h5, h6, p, blockquote, pre {
+  margin: 0;
+  font-weight: normal;
+}
+
+/* Remove quotes */
+blockquote, q {
+  quotes: none;
+}
+blockquote::before, blockquote::after,
+q::before, q::after {
+  content: '';
+  content: none;
+}
+
+/* Remove default table borders */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* Remove default textarea resize */
+textarea {
+  resize: vertical;
+}
+
+/* Remove default form element styles */
+button, input, select, textarea {
   font: inherit;
-  vertical-align: baseline;
+  color: inherit;
+  background: transparent;
+  border: none;
+  outline: none;
+  /* Safari & iOS */
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Remove inner spacing in Safari for search inputs */
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+}
+
+/* Remove focus outlines but keep accessible focus style */
+:focus {
+  outline: none;
+}
+
+/* Root sensible defaults */
+:root {
+  /* Prevent font scaling in landscape on iOS */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Enable smoother fonts in Safari */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Anchor & image defaults */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
 }
 
 /* HTML5 display-role reset for older browsers */
@@ -30,85 +91,18 @@ footer, header, hgroup, menu, nav, section {
   display: block;
 }
 
-body {
-  /* line-height is set by :root */
-  line-height: inherit;
+/* Remove details default marker */
+details > summary::-webkit-details-marker {
+  display: none;
 }
 
-ol, ul {
-  list-style: none;
-}
-
-blockquote, q {
-  quotes: none;
-}
-
-blockquote:before, blockquote:after,
-q:before, q:after {
-  content: '';
-  content: none;
-}
-
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-s, u {
-  text-decoration: none;
-}
-
-select {
-  appearance: none;
-  -webkit-appearance: none;
-}
-
-input[type="submit"],
-button {
-  width: auto;
-  overflow: visible;
-  cursor: pointer;
-  line-height: inherit;
-  color: inherit;
-
-  /* Corrects inability to style clickable `input` types in iOS */
-  appearance: none;
-}
-
-button::-moz-focus-inner {
-  /* Remove excess padding and border in Firefox 4+ */
+/* Utility: hide visually but keep accessible */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap; /* added line */
   border: 0;
-  padding: 0;
-}
-
-/* safari requires some special resets for input type="search" */
-input[type="search"] {
-  -webkit-appearance: textfield;
-}
-input[type="search"]::-webkit-search-decoration {
-  -webkit-appearance: none;
-}
-
-/* ie 11 has it's own magic font-size rules for sub and sup */
-@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-  sub, sup {font-size:120%;}
-}
-
-/* some sensible global styles */
-:root {
- /* prevents mobile browsers from sometimes scaling text */
-  text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-}
-
-/* sets box-sizing back to the sane border-box for all elements */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
 }
