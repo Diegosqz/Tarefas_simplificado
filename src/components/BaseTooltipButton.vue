@@ -1,12 +1,7 @@
 <template>
   <div class="tooltip-wrapper">
-    <button
-      :title="label"
-      :class="['tooltip-button', type]"
-      @mouseenter="showTooltip = true"
-      @mouseleave="showTooltip = false"
-      @click="$emit('click')"
-    >
+    <button :title="label" :class="['tooltip-button', type]" @mouseenter="showTooltip = true"
+      @mouseleave="showTooltip = false" @click="$emit('click')">
       <slot>
         <!-- fallback: mostra o ícone se nenhum slot for passado -->
         {{ icon }}
@@ -40,12 +35,14 @@ const showTooltip = ref(false);
 .tooltip-button {
   border: none;
   cursor: pointer;
-  font-size: 0.7rem; /* menor fonte, afeta emoji também */
-  padding: 6px 8px;  /* reduzido */
+  font-size: 0.7rem;
+  /* menor fonte, afeta emoji também */
+  padding: 4px 8px;
+  /* reduzido */
   border-radius: 4px;
   background-color: transparent;
   color: inherit;
-  line-height: 1;
+  line-height: 3;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -59,6 +56,7 @@ const showTooltip = ref(false);
   height: 16px;
   font-size: 0.9rem;
 }
+
 /* estilos por tipo */
 .tooltip-button.default {
   background-color: #f0f0f0;

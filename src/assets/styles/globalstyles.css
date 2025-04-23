@@ -8,6 +8,50 @@
   --box-shadow-regular: 0 4px 10px rgba(0, 0, 0, 0.1);
   --border-radius: 8px;
   --font-base: Arial, sans-serif;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+}
+
+/* 2) Listas funcionando de novo */
+ul {
+  list-style: disc inside;
+  margin: 1em 0;
+  padding-inline-start: 1.5em;
+}
+li {
+  margin-bottom: 0.5em;
+}
+
+/* 3) Forçar bloco e largura completa nos contêineres custom */
+.base-task-list,
+.base-task-list ul {
+  display: block;
+  width: 100%;
+}
+
+/* 4) Itens de tarefa alinhados */
+.base-task-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* 5) Inputs e botões “restaurados” */
+input[type="checkbox"],
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  padding: 0.5em;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  background: #fff;
+  cursor: pointer;
 }
 
 /* Tipografia base */
@@ -27,14 +71,25 @@ button {
   padding: 10px 20px;
   font-size: 1rem;
   background-color: #f0f0f0;
-  border: 1px solid var(--neutral-border);
+  border: 1px solid var(--neutral-border, #ccc); /* Usa uma variável CSS ou cor padrão */
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.2s; /* Adicionando uma animação de transformação */
+  outline: none; /* Remove o contorno de foco padrão */
 }
-
+/* Estilo quando o botão é pressionado */
+button:active {
+  background-color: #ccc; /* Cor de fundo mais escura quando pressionado */
+  transform: scale(0.98); /* Leve redução de tamanho para dar um efeito de clique */
+}
+/* Estilo quando o botão recebe o foco */
+button:focus {
+  outline: 2px solid #005fcc; /* Adiciona um contorno de foco acessível */
+  outline-offset: 2px;
+}
 button:hover {
   background-color: #e0e0e0;
+  transform: scale(1.05); /* Aumenta ligeiramente o botão para dar um efeito de destaque */
 }
 
 button:disabled {

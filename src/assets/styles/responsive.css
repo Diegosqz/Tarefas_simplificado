@@ -1,0 +1,131 @@
+/* O seu reset.css já define os estilos básicos para todos os navegadores */
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  text-size-adjust: 100%;
+}
+
+/* Container principal */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Cabeçalho */
+header {
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 20px 0;
+}
+
+/* Navegação */
+nav ul {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 0;
+}
+
+nav ul li {
+  margin: 0 15px;
+}
+
+nav ul li a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+nav ul li a:hover {
+  text-decoration: underline;
+}
+
+/* Seção de conteúdo */
+section {
+  padding: 20px 0;
+}
+
+section h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+/* Layout principal - 2 colunas para telas grandes */
+.main-content {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.main-content .left,
+.main-content .right {
+  width: 48%;
+}
+
+.left {
+  background-color: #e0e0e0;
+  padding: 15px;
+}
+
+.right {
+  background-color: #ccc;
+  padding: 15px;
+}
+
+/* Rodapé */
+footer {
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
+}
+
+/* Responsividade: ajustes para telas menores */
+
+/* Para telas de até 768px (tablets e dispositivos móveis em paisagem) */
+@media (max-width: 768px) {
+  .main-content {
+    flex-direction: column;
+  }
+
+  .main-content .left,
+  .main-content .right {
+    width: 100%;
+  }
+
+  nav ul {
+    flex-direction: column;
+    padding-top: 20px;
+  }
+
+  nav ul li {
+    margin: 10px 0;
+  }
+}
+
+/* Para telas de até 480px (smartphones em retrato) */
+@media (max-width: 480px) {
+  header {
+    padding: 10px 0;
+  }
+
+  nav ul li a {
+    font-size: 16px;
+  }
+
+  section h2 {
+    font-size: 1.5rem;
+  }
+
+  footer {
+    padding: 5px 0;
+  }
+}

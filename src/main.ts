@@ -1,3 +1,6 @@
+import './assets/styles/reset.css'
+import './assets/styles/globalstyles.css'
+import './assets/styles/responsive.css'
 import './assets/main.css'
 
 import { createApp } from 'vue'

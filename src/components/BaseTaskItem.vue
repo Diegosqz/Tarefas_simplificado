@@ -1,11 +1,14 @@
 <template>
   <li :class="{ completed: task.completed }">
-    <input type="checkbox" v-model="task.completed" />
-    <span>{{ task.text }}</span>
+    <div class="task-info">
+      <input type="checkbox" v-model="task.completed" />
+      <span>{{ task.text }}</span>
+    </div>
     <baseEditTask @edit="$emit('edit')" />
     <baseDeleteTask @delete="$emit('delete')" />
   </li>
 </template>
+
 
 <script setup lang="ts">
 import baseDeleteTask from './baseDeleteTask.vue';
@@ -26,9 +29,17 @@ defineEmits(['edit', 'delete']);
 
 li {
   display: flex;
-  align-items: center;
-  gap: 8px;
   padding: 8px;
   border-bottom: 1px solid #eee;
+}
+
+.task-info {
+  align-items: center;
+  /* controla espaço só entre checkbox e texto */
+}
+
+.completed span {
+  text-decoration: line-through;
+  color: #999;
 }
 </style>
