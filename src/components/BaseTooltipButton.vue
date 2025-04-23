@@ -1,0 +1,93 @@
+<template>
+  <div class="tooltip-wrapper">
+    <button
+      :title="label"
+      :class="['tooltip-button', type]"
+      @mouseenter="showTooltip = true"
+      @mouseleave="showTooltip = false"
+      @click="$emit('click')"
+    >
+      <slot>
+        <!-- fallback: mostra o ícone se nenhum slot for passado -->
+        {{ icon }}
+      </slot>
+    </button>
+    <span v-if="showTooltip" class="tooltip">{{ label }}</span>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue';
+
+defineProps<{
+  label: string;
+  icon?: string;
+  type?: 'default' | 'primary' | 'danger';
+}>();
+
+defineEmits(['click']);
+
+const showTooltip = ref(false);
+</script>
+
+<style scoped>
+.tooltip-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+/* botão base */
+.tooltip-button {
+  border: none;
+  cursor: pointer;
+  font-size: 0.7rem; /* menor fonte, afeta emoji também */
+  padding: 6px 8px;  /* reduzido */
+  border-radius: 4px;
+  background-color: transparent;
+  color: inherit;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+
+.tooltip-button svg,
+.tooltip-button i {
+  width: 16px;
+  height: 16px;
+  font-size: 0.9rem;
+}
+/* estilos por tipo */
+.tooltip-button.default {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.tooltip-button.primary {
+  background-color: #42b983;
+  color: white;
+}
+
+.tooltip-button.danger {
+  background-color: #e74c3c;
+  color: white;
+}
+
+/* tooltip */
+.tooltip {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  z-index: 10;
+  pointer-events: none;
+}
+</style>
