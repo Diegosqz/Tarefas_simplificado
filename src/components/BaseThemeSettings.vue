@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, watch } from 'vue';
 
 // Prop recebida do componente pai
 const props = defineProps({
@@ -23,4 +23,14 @@ function updateTheme(event: Event) {
   const target = event.target as HTMLSelectElement;
   emit('update:selectedTheme', target.value);
 }
+watch(
+  () => props.selectedTheme,
+  (newTheme) => {
+    document.body.classList.remove('light', 'dark'); // remove classes anteriores
+    if (newTheme) {
+      document.body.classList.add(newTheme); // adiciona classe nova
+    }
+  },
+  { immediate: true } // já aplica o tema ao carregar
+);
 </script>

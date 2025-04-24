@@ -44,11 +44,8 @@ button, input, select, textarea {
   font: inherit;
   color: inherit;
   background: transparent;
-  border: none;
+  /* border: none; */
   outline: none;
-  /* Safari & iOS */
-  -webkit-appearance: none;
-  appearance: none;
 }
 
 /* Remove inner spacing in Safari for search inputs */

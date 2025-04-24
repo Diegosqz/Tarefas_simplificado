@@ -4,32 +4,17 @@
       <h1>Configurações</h1>
       <!-- Abas horizontais -->
       <div class="tabs">
-        <button
-          class="tab-button"
-          :class="{ active: activeTab === 'theme' }"
-          @click="activeTab = 'theme'"
-        >
+        <button class="tab-button" :class="{ active: activeTab === 'theme' }" @click="activeTab = 'theme'">
           Tema
         </button>
-        <button
-          class="tab-button"
-          :class="{ active: activeTab === 'notifications' }"
-          @click="activeTab = 'notifications'"
-        >
+        <button class="tab-button" :class="{ active: activeTab === 'notifications' }"
+          @click="activeTab = 'notifications'">
           Notificações
         </button>
-        <button
-          class="tab-button"
-          :class="{ active: activeTab === 'language' }"
-          @click="activeTab = 'language'"
-        >
+        <button class="tab-button" :class="{ active: activeTab === 'language' }" @click="activeTab = 'language'">
           Idioma
         </button>
-        <button
-          class="tab-button"
-          :class="{ active: activeTab === 'user' }"
-          @click="activeTab = 'user'"
-        >
+        <button class="tab-button" :class="{ active: activeTab === 'user' }" @click="activeTab = 'user'">
           Usuário
         </button>
       </div>
@@ -42,22 +27,19 @@
       </div>
 
       <div v-if="activeTab === 'notifications'">
-        <BaseNotificationSettings
-          :notificationsEnabled="notificationsEnabled"
-          :notificationEmail="notificationEmail"
-          :notificationPhone="notificationPhone"
-          @update:notificationsEnabled="notificationsEnabled = $event"
+        <BaseNotificationSettings :notificationsEnabled="notificationsEnabled" :notificationEmail="notificationEmail"
+          :notificationPhone="notificationPhone" @update:notificationsEnabled="notificationsEnabled = $event"
           @update:notificationEmail="notificationEmail = $event"
-          @update:notificationPhone="notificationPhone = $event"
-        />
+          @update:notificationPhone="notificationPhone = $event" />
       </div>
 
       <div v-if="activeTab === 'language'">
-        <BaseLanguageSettings :selectedLanguage="selectedLanguage" @update:selectedLanguage="selectedLanguage = $event" />
+        <BaseLanguageSettings :selectedLanguage="selectedLanguage"
+          @update:selectedLanguage="selectedLanguage = $event" />
       </div>
 
       <div v-if="activeTab === 'user'">
-        <!-- Componente de Usuário (nome e email) -->
+        <!-- Componente de Usuário (nome e idade) -->
         <div class="setting-item">
           <label for="name">Nome</label>
           <input id="name" v-model="userName" placeholder="Insira seu nome" required />
@@ -138,8 +120,7 @@ function saveSettings() {
 
 .setting-item {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 8px;
 }
-
 </style>
