@@ -1,7 +1,7 @@
 <template>
   <div class="tooltip-wrapper">
     <button :title="label" :class="['tooltip-button', type]" @mouseenter="showTooltip = true"
-      @mouseleave="showTooltip = false" @click="$emit('click')">
+      @mouseleave="showTooltip = false" @click="$emit('click')" :style="{ color: iconColor }">
       <slot>
         <!-- fallback: mostra o ícone se nenhum slot for passado -->
         {{ icon }}
@@ -12,7 +12,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, inject } from 'vue';
+const isDark = inject('isDark', false)
+
+const iconColor = computed(() => {
+  return isDark ? 'white' : 'black'
+})
 
 defineProps<{
   label: string;
@@ -87,8 +92,11 @@ const showTooltip = ref(false);
 
 /* estilos por tipo */
 .tooltip-button.default {
-  background-color: #f0f0f0;
-  color: #333;
+  /*background-color: #f0f0f0;*/
+  /*color: #333;*/
+  background-color: var(--neutral-bg);
+  color: var(--text-color);
+  border: 1px solid var(--neutral-border);
 }
 
 .tooltip-button.primary {
