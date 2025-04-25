@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import baseDeleteTask from './baseDeleteTask.vue';
-import baseEditTask from './baseEditTask.vue';
+import BaseEditTask from './BaseEditTask.vue';
 
 defineProps<{
   task: { id: number; text: string; completed: boolean };

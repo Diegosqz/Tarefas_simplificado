@@ -4,16 +4,16 @@
       <h1>Configurações</h1>
       <!-- Abas horizontais -->
       <div class="tabs">
-        <button class="tab-button" :class="{ active: activeTab === 'theme' }" @click="activeTab = 'theme'">
+        <!--<button class="tab-button" :class="{ active: activeTab === 'theme' }" @click="activeTab = 'theme'">
           Tema
-        </button>
+        </button>-->
         <button class="tab-button" :class="{ active: activeTab === 'notifications' }"
           @click="activeTab = 'notifications'">
           Notificações
         </button>
-        <button class="tab-button" :class="{ active: activeTab === 'language' }" @click="activeTab = 'language'">
+        <!--<button class="tab-button" :class="{ active: activeTab === 'language' }" @click="activeTab = 'language'">
           Idioma
-        </button>
+        </button>-->
         <button class="tab-button" :class="{ active: activeTab === 'user' }" @click="activeTab = 'user'">
           Usuário
         </button>
@@ -22,9 +22,9 @@
 
     <!-- Conteúdo das configurações com base na aba selecionada -->
     <div class="settings-content">
-      <div v-if="activeTab === 'theme'">
+      <!--<div v-if="activeTab === 'theme'">
         <BaseThemeSettings :selectedTheme="selectedTheme" @update:selectedTheme="selectedTheme = $event" />
-      </div>
+      </div>-->
 
       <div v-if="activeTab === 'notifications'">
         <BaseNotificationSettings :notificationsEnabled="notificationsEnabled" :notificationEmail="notificationEmail"
@@ -32,28 +32,32 @@
           @update:notificationEmail="notificationEmail = $event"
           @update:notificationPhone="notificationPhone = $event" />
       </div>
-
-      <div v-if="activeTab === 'language'">
-        <BaseLanguageSettings :selectedLanguage="selectedLanguage"
-          @update:selectedLanguage="selectedLanguage = $event" />
+      <div v-if="activeTab === 'user'">
+        <BaseUserSettings :userName="userName" :dn="dn" :email="email" @update:userName="userName = $event"
+          @update:dn="dn = $event" @update:email="email = $event" />
       </div>
 
-      <div v-if="activeTab === 'user'">
-        <!-- Componente de Usuário (nome e idade) -->
+      <!--<div v-if="activeTab === 'language'">
+        <BaseLanguageSettings :selectedLanguage="selectedLanguage"
+          @update:selectedLanguage="selectedLanguage = $event" />
+      </div>-->
+
+      <!--<div v-if="activeTab === 'user'">
+       Componente de Usuário (nome e idade)
         <div class="setting-item">
           <label for="name">Nome</label>
           <input id="name" v-model="userName" placeholder="Insira seu nome" required />
 
-          <label for="dob">Data de nascimento</label>
-          <input id="dob" type="date" v-model="dob" required />
+          <label for="dn">Data de nascimento</label>
+          <input id="dn" type="date" v-model="dn" required />
         </div>
 
-        <!-- Campo de Email -->
+         Campo de Email
         <div class="setting-item">
           <label for="email">Email:</label>
           <input id="email" type="email" v-model="email" placeholder="exemplo@email.com" />
         </div>
-      </div>
+      </div>-->
     </div>
 
     <!-- Botões de ação -->
@@ -64,32 +68,33 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import BaseThemeSettings from '@/components/BaseThemeSettings.vue';
-import BaseLanguageSettings from '@/components/BaseLanguageSettings.vue';
+//import BaseThemeSettings from '@/components/BaseThemeSettings.vue';
+//import BaseLanguageSettings from '@/components/BaseLanguageSettings.vue';
 import BaseNotificationSettings from '@/components/BaseNotificationSettings.vue';
 import BaseActionButtons from '@/components/BaseActionsButtons.vue';
-
-const activeTab = ref('theme');
-const selectedTheme = ref('light');
-const selectedLanguage = ref('pt');
+import BaseUserSettings from '@/components/BaseUserSettings.vue';
+const availableTabs = ['notifications', 'user'];
+const activeTab = ref(availableTabs[0]);
+//const activeTab = ref('notifications');
+//const activeTab = ref('theme');
+//const selectedTheme = ref('light');
+//const selectedLanguage = ref('pt');
 const notificationsEnabled = ref(true);
 const notificationEmail = ref('');
 const notificationPhone = ref('');
 const userName = ref('');
-const dob = ref('');
+const dn = ref('');
 const email = ref('');
 const router = useRouter();
 
 // Computed property para verificar se o formulário está válido
-const isFormValid = computed(() => userName.value && dob.value && email.value);
+const isFormValid = computed(() => userName.value && dn.value && email.value);
 
 // Função para salvar as configurações
 function saveSettings() {
   alert(`Configurações salvas:
-    Tema: ${selectedTheme.value}
-    Idioma: ${selectedLanguage.value}
     Nome: ${userName.value}
-    Data de Nascimento: ${dob.value}
+    Data de Nascimento: ${dn.value}
     Email: ${email.value}`);
   router.push({ name: 'AboutView' });
 }
@@ -98,7 +103,7 @@ function saveSettings() {
 <style scoped>
 .tabs {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   margin-bottom: 20px;
 }
 

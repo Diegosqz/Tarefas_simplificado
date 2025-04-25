@@ -1,18 +1,27 @@
 <template>
   <div class="page-wrapper">
-    <!-- Seletor de idioma no canto superior direito -->
-    <div class="language-switcher" @click="toggleLanguageMenu">
-      <span class="current-language">{{ getFlag(currentLanguage) }}
-        <span class="arrow" :class="{ open: languageMenuVisible }">▾</span> </span>
+    <!-- Contêiner para idioma e tema -->
+    <div class="top-controls">
+      <!-- Seletor de idioma no canto superior direito -->
+      <BaseTooltipButton label="Trocar idioma" @click="toggleLanguageMenu">
+        <span class="current-language">{{ getFlag(currentLanguage) }}
+          <span class="arrow" :class="{ open: languageMenuVisible }">▾</span>
+        </span>
+      </BaseTooltipButton>
       <div v-if="languageMenuVisible" class="language-options">
-        <span v-for="lang in otherLanguages" :key="lang" @click.stop="changeLanguage(lang)"> {{ getFlag(lang) }}
+        <span v-for="lang in otherLanguages" :key="lang" @click.stop="changeLanguage(lang)">
+          {{ getFlag(lang) }}
         </span>
       </div>
+
+      <!-- Botão de alternância de tema com tooltip -->
+      <BaseTooltipButton label="Alternar Tema" @click="toggleTheme">
+        <div class="theme-switcher">
+          <span>{{ currentTheme === 'dark' ? '🌙' : '☀️' }}</span>
+        </div>
+      </BaseTooltipButton>
     </div>
-    <!-- Botão de alternância de tema -->
-    <div class="theme-switcher" @click="toggleTheme">
-      <span>{{ currentTheme === 'dark' ? '🌙' : '☀️' }}</span>
-    </div>
+
     <div class="task-app">
       <h1>Lista de Tarefas</h1>
 
@@ -30,7 +39,6 @@
   </div>
 </template>
 
-
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
@@ -38,6 +46,7 @@ import { useI18n } from 'vue-i18n'
 import baseAddTask from '@/components/BaseAddTask.vue';
 import baseTaskList from '@/components/BaseTaskList.vue';
 import BaseTooltipButton from '@/components/BaseTooltipButton.vue';
+
 const tasks = ref<{ id: number; text: string; completed: boolean }[]>([]);
 const nextId = ref(1);
 const router = useRouter();
@@ -47,6 +56,7 @@ const languageMenuVisible = ref(false);
 const availableLanguages = ['en', 'pt', 'es'];
 
 const currentTheme = ref(localStorage.getItem('theme') || 'light'); // Recupera o tema salvo ou usa 'light' como padrão
+
 // Função para alternar entre os temas
 function toggleTheme() {
   currentTheme.value = currentTheme.value === 'light' ? 'dark' : 'light';
@@ -56,19 +66,19 @@ function toggleTheme() {
   document.body.classList.remove('light', 'dark');
   document.body.classList.add(currentTheme.value);
 }
+
 // Função para mudar o idioma
 function toggleLanguageMenu() {
   languageMenuVisible.value = !languageMenuVisible.value;
 }
+
 const otherLanguages = computed(() =>
   availableLanguages.filter(lang => lang !== currentLanguage.value)
 );
 
-
 function changeLanguage(lang: string) {
   currentLanguage.value = lang;
   languageMenuVisible.value = false;
-  // Aqui você pode integrar com i18n ou outra lógica de troca
   console.log(`Idioma trocado para: ${lang}`);
 }
 
@@ -84,6 +94,7 @@ function getFlag(lang: string): string {
       return '🌐';
   }
 }
+
 function addTask(text: string) {
   tasks.value.push({ id: nextId.value++, text, completed: false });
 }
@@ -105,7 +116,7 @@ function editTask(id: number) {
 function openSettings() {
   router.push('/configuracoes');
 }
-// Aplique o tema assim que o componente for montado
+
 onMounted(() => {
   if (currentTheme.value === 'dark') {
     document.body.classList.add('dark-theme');
@@ -122,12 +133,11 @@ onMounted(() => {
   box-shadow: var(--box-shadow-light);
 }
 
-
 .top-bar {
   display: flex;
   align-items: stretch;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
 }
 
 .top-bar button {
@@ -135,18 +145,29 @@ onMounted(() => {
   height: 100%;
 }
 
-.theme-switcher {
+/* Contêiner para idioma e tema */
+.top-controls {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  /* Diminuir o gap para aproximar os ícones de idioma e tema */
+  gap: 6px;
+  /* Ajuste para reduzir a distância entre eles */
   position: absolute;
-  top: 32px;
-  right: 75px;
+  top: 20px;
+  right: 19px;
+  z-index: 100;
+}
+
+/* Estilos para o botão de tema */
+.theme-switcher {
+  font-size: 18px;
   cursor: pointer;
   user-select: none;
 }
 
+/* Estilos do tooltip */
 .language-switcher {
-  position: absolute;
-  top: 30px;
-  right: 40px;
   cursor: pointer;
   user-select: none;
 }
