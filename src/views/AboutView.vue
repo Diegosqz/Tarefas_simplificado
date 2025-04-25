@@ -32,7 +32,7 @@
 
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n'
 import baseAddTask from '@/components/BaseAddTask.vue';
@@ -41,15 +41,17 @@ import BaseTooltipButton from '@/components/BaseTooltipButton.vue';
 const tasks = ref<{ id: number; text: string; completed: boolean }[]>([]);
 const nextId = ref(1);
 const router = useRouter();
-const { locale } = useI18n()
+const { locale } = useI18n();
 const currentLanguage = ref('pt');
 const languageMenuVisible = ref(false);
 const availableLanguages = ['en', 'pt', 'es'];
-const currentTheme = ref('light'); // Tema inicial
+
+const currentTheme = ref(localStorage.getItem('theme') || 'light'); // Recupera o tema salvo ou usa 'light' como padrão
 // Função para alternar entre os temas
 function toggleTheme() {
   currentTheme.value = currentTheme.value === 'light' ? 'dark' : 'light';
   document.body.classList.toggle('dark-theme', currentTheme.value === 'dark'); // Adiciona a classe para o body
+  localStorage.setItem('theme', currentTheme.value); // Salva a escolha no localStorage
 }
 // Função para mudar o idioma
 function toggleLanguageMenu() {
@@ -100,6 +102,12 @@ function editTask(id: number) {
 function openSettings() {
   router.push('/configuracoes');
 }
+// Aplique o tema assim que o componente for montado
+onMounted(() => {
+  if (currentTheme.value === 'dark') {
+    document.body.classList.add('dark-theme');
+  }
+});
 </script>
 
 <style scoped>
