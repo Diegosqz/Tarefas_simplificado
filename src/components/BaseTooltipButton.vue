@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 defineProps<{
   label: string;
@@ -47,6 +47,34 @@ const showTooltip = ref(false);
   align-items: center;
   justify-content: center;
   transition: background 0.2s;
+}
+
+.arrow.open {
+  transform: rotate(180deg);
+}
+
+.language-options {
+  margin-top: 5px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  z-index: 100;
+}
+
+.language-options span {
+  font-size: 18px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.language-options span:hover {
+  background-color: #f0f0f0;
 }
 
 

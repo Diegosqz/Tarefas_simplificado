@@ -2,9 +2,15 @@
   <div class="setting-item">
     <label for="language">Idioma:</label>
     <select id="language" :value="selectedLanguage" @input="updateLanguage($event)">
-      <option value="pt">Português</option>
-      <option value="en">Inglês</option>
-      <option value="es">Espanhol</option>
+      <option value="pt" :title="'Português'">
+        <FlagIcon iso="br" /> Português
+      </option>
+      <option value="en" :title="'Inglês'">
+        <FlagIcon iso="us" /> Inglês
+      </option>
+      <option value="es" :title="'Espanhol'">
+        <FlagIcon iso="es" /> Espanhol
+      </option>
     </select>
   </div>
 </template>
@@ -25,3 +31,7 @@ function updateLanguage(event: Event) {
   emit('update:selectedLanguage', target.value);
 }
 </script>
+
+<style scoped>
+/* Aqui você pode adicionar estilos personalizados para o seu componente */
+</style>

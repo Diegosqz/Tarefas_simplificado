@@ -18,6 +18,7 @@ const router = useRouter();
 function onSave() {
   // Emitir evento para salvar configurações
   emit('save');
+  router.push({ name: 'AboutView' });
 }
 
 // Função para lidar com o clique no botão "Cancelar"
