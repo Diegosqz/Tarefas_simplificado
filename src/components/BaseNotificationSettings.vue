@@ -1,46 +1,53 @@
 <template>
-  <div class="settings-wrapper">
+  <div>
     <!-- Notificações -->
-    <div class="notification-row">
+    <div class="setting-item">
       <label for="notifications">Notificações:</label>
       <div class="status-toggle">
         <span>{{ notificationsEnabled ? 'Ativado' : 'Desativado' }}</span>
-        <input id="notifications" type="checkbox" :checked="notificationsEnabled"
-          @change="updateNotifications($event)" />
+        <input id="notifications" type="checkbox" :checked="notificationsEnabled" @change="updateNotifications" />
       </div>
     </div>
 
     <!-- Email principal -->
     <div class="setting-item">
       <label for="notification-email">Email:</label>
-      <input id="notification-email" type="email" :value="notificationEmail" @input="updateEmail($event)"
+      <input id="notification-email" type="email" :value="notificationEmail" @input="updateEmail"
         placeholder="exemplo@email.com" />
     </div>
 
     <!-- Emails adicionais -->
-    <div v-for="(email, index) in additionalEmails" :key="'extra-email-' + index" class="input-group">
+    <div v-for="(email, index) in additionalEmails" :key="`extra-email-${index}`" class="setting-item">
+      <label class="placeholder-label"></label>
       <input type="email" v-model="additionalEmails[index]" placeholder="Email adicional" />
       <button type="button" @click="removeEmail(index)">🗑️</button>
     </div>
-    <button class="add-button" type="button" @click="addEmail">
-      + Adicionar Email
-    </button>
+    <div class="setting-item">
+      <span class="placeholder-label"></span>
+      <button class="add-button" type="button" @click="addEmail">
+        + Adicionar Email
+      </button>
+    </div>
 
     <!-- Telefone principal -->
     <div class="setting-item">
       <label for="notification-phone">Telefone:</label>
-      <input id="notification-phone" type="tel" :value="notificationPhone" @input="updatePhone($event)"
+      <input id="notification-phone" type="tel" :value="notificationPhone" @input="updatePhone"
         placeholder="(11) 91234-5678" />
     </div>
 
     <!-- Telefones adicionais -->
-    <div v-for="(phone, index) in additionalPhones" :key="'extra-phone-' + index" class="input-group">
+    <div v-for="(phone, index) in additionalPhones" :key="`extra-phone-${index}`" class="setting-item">
+      <label class="placeholder-label"></label>
       <input type="tel" v-model="additionalPhones[index]" placeholder="Telefone adicional" />
       <button type="button" @click="removePhone(index)">🗑️</button>
     </div>
-    <button class="add-button" type="button" @click="addPhone">
-      + Adicionar Telefone
-    </button>
+    <div class="setting-item">
+      <span class="placeholder-label"></span>
+      <button class="add-button" type="button" @click="addPhone">
+        + Adicionar Telefone
+      </button>
+    </div>
   </div>
 </template>
 
@@ -99,35 +106,24 @@ function removePhone(index: number) {
 </script>
 
 <style scoped>
-/* Centralizador geral */
-.settings-wrapper {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Bloco geral de cada campo */
 .setting-item {
-  width: 100%;
-  max-width: 400px;
-  margin-bottom: 15px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  gap: 8px;
   align-items: center;
-  gap: 6px;
+  margin-bottom: 10px;
 }
 
-/* Notificação - layout horizontal centralizado */
-.notification-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
+.setting-item label,
+.setting-item .placeholder-label {
+  width: 120px;
+  flex-shrink: 0;
+}
+
+/* Override global input width:100% */
+.setting-item input {
+  flex: 1;
+  width: auto;
 }
 
 .status-toggle {
@@ -136,41 +132,8 @@ function removePhone(index: number) {
   gap: 10px;
 }
 
-/* Inputs agrupados com botão 🗑️ */
-.input-group {
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 10px;
-  width: 100%;
-  max-width: 400px;
-}
-
-.input-group input {
-  flex: 1;
-  min-width: 0;
-}
-
-.input-group button {
-  padding: 6px 5px;
-  background: #eee;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  font-size: 18px;
-}
-
-/* Botões de adicionar */
 .add-button {
-  display: block;
-  margin: 10px auto 20px;
-  padding: 8px 16px;
+  padding: 6px 12px;
   background: #007bff;
   color: white;
   border: none;
@@ -178,6 +141,7 @@ function removePhone(index: number) {
   font-size: 14px;
   cursor: pointer;
   transition: background 0.2s;
+  flex-shrink: 0;
 }
 
 .add-button:hover {
