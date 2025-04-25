@@ -8,7 +8,9 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
+const { locale, t } = useI18n();
 // Props do componente
 const { isFormValid } = defineProps<{ isFormValid: boolean }>();
 

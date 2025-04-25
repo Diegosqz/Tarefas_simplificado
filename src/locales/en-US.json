@@ -1,0 +1,28 @@
+{
+  "en-US": {
+    "Hello, World": "Hello, World!",
+    "Olá, Mundo!": "Hello, World!",
+    "tabs": {
+      "notifications": "Notifications",
+      "user": "User"
+    },
+    "settings": {
+      "title": "Settings",
+      "notifications": "Notifications",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "email": "Email",
+      "addEmail": "+ Add Email",
+      "removeConfirmationEmail": "Do you want to remove this email?",
+      "phone": "Phone",
+      "addPhone": "+ Add Phone",
+      "removeConfirmationPhone": "Do you want to remove this phone?"
+    },
+    "user": {
+      "name": "Name",
+      "birthdate": "Birthdate",
+      "save": "Save Settings",
+      "cancel": "Cancel"
+    }
+  }
+}

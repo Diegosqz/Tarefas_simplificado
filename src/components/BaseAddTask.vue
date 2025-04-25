@@ -1,10 +1,6 @@
 <template>
   <div class="add-task">
-    <input
-      v-model="taskText"
-      @keyup.enter="emitAdd"
-      placeholder="Nova tarefa 📝"
-    />
+    <input v-model="taskText" @keyup.enter="emitAdd" placeholder="Nova tarefa 📝" />
     <BaseTooltipButton icon="➕" label="Adicionar" @click="emitAdd" />
   </div>
 </template>
@@ -12,7 +8,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import BaseTooltipButton from './BaseTooltipButton.vue';
+import { useI18n } from 'vue-i18n';
 
+const { locale, t } = useI18n();
 const taskText = ref('');
 const showTooltip = ref(false);
 const emit = defineEmits(['add']);

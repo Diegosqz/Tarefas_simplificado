@@ -1,6 +1,28 @@
 {
-    "Hello, World":"Hola, Mundo!",
-    "Olá, Mundo!":"Hola, Mundo!",
-    "greeting": "Hola"
-    
+  "es": {
+    "Hello, World": "¡Hola, Mundo!",
+    "Olá, Mundo!": "¡Hola, Mundo!",
+    "tabs": {
+      "notifications": "Notificaciones",
+      "user": "Usuario"
+    },
+    "settings": {
+      "title": "Configuraciones",
+      "notifications": "Notificaciones",
+      "enabled": "Activado",
+      "disabled": "Desactivado",
+      "email": "Correo electrónico",
+      "addEmail": "+ Agregar correo",
+      "removeConfirmationEmail": "¿Desea eliminar este correo?",
+      "phone": "Teléfono",
+      "addPhone": "+ Agregar teléfono",
+      "removeConfirmationPhone": "¿Desea eliminar este teléfono?"
+    },
+    "user": {
+      "name": "Nombre",
+      "birthdate": "Fecha de nacimiento",
+      "save": "Guardar configuración",
+      "cancel": "Cancelar"
+    }
+  }
 }

@@ -1,11 +1,13 @@
 <template>
-    <BaseTooltipButton icon="📝" label="Editar" @click="$emit('edit')" />
+  <BaseTooltipButton icon="📝" label="Editar" @click="$emit('edit')" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
 import BaseTooltipButton from './BaseTooltipButton.vue';
+import { useI18n } from 'vue-i18n';
 
+const { locale, t } = useI18n();
 const showTooltip = ref(false);
 defineEmits(['edit']);
 </script>

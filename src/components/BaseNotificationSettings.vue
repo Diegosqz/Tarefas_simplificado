@@ -53,7 +53,9 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
+const { locale, t } = useI18n();
 const props = defineProps({
   notificationsEnabled: Boolean,
   notificationEmail: String,

@@ -12,7 +12,10 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+
 import { ref, computed, inject } from 'vue';
+const { locale, t } = useI18n();
 const isDark = inject('isDark', false)
 
 const iconColor = computed(() => {

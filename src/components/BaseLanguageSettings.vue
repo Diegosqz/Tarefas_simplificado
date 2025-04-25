@@ -17,7 +17,9 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue';
+import { useI18n } from 'vue-i18n';
 
+const { locale, t } = useI18n();
 // Prop recebida do componente pai
 const props = defineProps({
   selectedLanguage: String,

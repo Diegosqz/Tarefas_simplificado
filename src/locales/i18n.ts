@@ -1,18 +1,17 @@
 import { createI18n } from 'vue-i18n';
-
-// Importar os arquivos de tradução (pt.json, en.json, es.json)
-import pt from './pt.json';
-import en from './en.json';
+import pt from './pt-BR.json';
+import en from './en-US.json';
 import es from './es.json';
 
-// Criar a instância do Vue I18n
 const i18n = createI18n({
-  locale: 'pt', // Idioma padrão
+  legacy: false,
+  locale: 'pt-BR',
+  fallbackLocale: 'en-US',
   messages: {
-    en,
-    pt,
-    es,
-  },
+    'pt-BR': pt['pt-BR'],
+    'en-US': en['en-US'],
+    'es': es['es']
+  }
 });
 
 export default i18n;

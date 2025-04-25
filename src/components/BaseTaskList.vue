@@ -17,9 +17,11 @@
 </template>
 
 <script setup lang="ts">
-import baseEditTask from './baseEditTask.vue'
-import baseDeleteTask from './baseDeleteTask.vue'
+import BaseEditTask from './BaseEditTask.vue';
+import BaseDeleteTask from './BaseDeleteTask.vue';
+import { useI18n } from 'vue-i18n';
 
+const { locale, t } = useI18n();
 interface Task {
   id: number
   text: string
