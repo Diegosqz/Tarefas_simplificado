@@ -9,7 +9,10 @@
         </span>
       </div>
     </div>
-
+    <!-- Botão de alternância de tema -->
+    <div class="theme-switcher" @click="toggleTheme">
+      <span>{{ currentTheme === 'dark' ? '🌙' : '☀️' }}</span>
+    </div>
     <div class="task-app">
       <h1>Lista de Tarefas</h1>
 
@@ -42,6 +45,12 @@ const { locale } = useI18n()
 const currentLanguage = ref('pt');
 const languageMenuVisible = ref(false);
 const availableLanguages = ['en', 'pt', 'es'];
+const currentTheme = ref('light'); // Tema inicial
+// Função para alternar entre os temas
+function toggleTheme() {
+  currentTheme.value = currentTheme.value === 'light' ? 'dark' : 'light';
+  document.body.classList.toggle('dark-theme', currentTheme.value === 'dark'); // Adiciona a classe para o body
+}
 // Função para mudar o idioma
 function toggleLanguageMenu() {
   languageMenuVisible.value = !languageMenuVisible.value;
@@ -102,7 +111,7 @@ function openSettings() {
   box-shadow: var(--box-shadow-light);
 }
 
-/*uuhsaduasgsuhasudhs*/
+
 .top-bar {
   display: flex;
   align-items: stretch;
@@ -113,6 +122,14 @@ function openSettings() {
 .top-bar button {
   font-size: 18px;
   height: 100%;
+}
+
+.theme-switcher {
+  position: absolute;
+  top: 32px;
+  right: 75px;
+  cursor: pointer;
+  user-select: none;
 }
 
 .language-switcher {
@@ -163,6 +180,16 @@ function openSettings() {
 
 .language-options span:hover {
   background-color: #f0f0f0;
+}
+
+body.dark-theme {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+body.dark-theme .task-app {
+  background-color: #2c2c2c;
+  color: #e0e0e0;
 }
 
 .page-wrapper {
