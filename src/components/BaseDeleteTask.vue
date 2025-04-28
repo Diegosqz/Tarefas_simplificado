@@ -1,5 +1,5 @@
 <template>
-  <BaseTooltipButton icon="🗑️" label="Excluir" @click="$emit('delete')" />
+  <BaseTooltipButton icon="🗑️" :label="t('delete')" @click="$emit('delete')" />
 </template>
 
 <script setup lang="ts">

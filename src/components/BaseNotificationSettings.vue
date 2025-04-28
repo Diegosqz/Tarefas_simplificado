@@ -2,50 +2,52 @@
   <div>
     <!-- Notificações -->
     <div class="setting-item">
-      <label for="notifications">Notificações:</label>
+      <label for="notifications">{{ t('settings.notifications') }}:</label>
       <div class="status-toggle">
-        <span>{{ notificationsEnabled ? 'Ativado' : 'Desativado' }}</span>
+        <span>
+          {{ notificationsEnabled ? t('settings.enabled') : t('settings.disabled') }}
+        </span>
         <input id="notifications" type="checkbox" :checked="notificationsEnabled" @change="updateNotifications" />
       </div>
     </div>
 
     <!-- Email principal -->
     <div class="setting-item">
-      <label for="notification-email">Email:</label>
+      <label for="notification-email">{{ t('settings.email') }}:</label>
       <input id="notification-email" type="email" :value="notificationEmail" @input="updateEmail"
-        placeholder="exemplo@email.com" />
+        :placeholder="t('settings.email')" />
     </div>
 
     <!-- Emails adicionais -->
     <div v-for="(email, index) in additionalEmails" :key="`extra-email-${index}`" class="setting-item">
       <label class="placeholder-label"></label>
-      <input type="email" v-model="additionalEmails[index]" placeholder="Email adicional" />
+      <input type="email" v-model="additionalEmails[index]" :placeholder="t('settings.addEmail')" />
       <button type="button" @click="removeEmail(index)">🗑️</button>
     </div>
     <div class="setting-item">
       <span class="placeholder-label"></span>
       <button class="add-button" type="button" @click="addEmail">
-        + Adicionar Email
+        {{ t('settings.addEmail') }}
       </button>
     </div>
 
     <!-- Telefone principal -->
     <div class="setting-item">
-      <label for="notification-phone">Telefone:</label>
+      <label for="notification-phone">{{ t('settings.phone') }}:</label>
       <input id="notification-phone" type="tel" :value="notificationPhone" @input="updatePhone"
-        placeholder="(11) 91234-5678" />
+        :placeholder="t('settings.phone')" />
     </div>
 
     <!-- Telefones adicionais -->
     <div v-for="(phone, index) in additionalPhones" :key="`extra-phone-${index}`" class="setting-item">
       <label class="placeholder-label"></label>
-      <input type="tel" v-model="additionalPhones[index]" placeholder="Telefone adicional" />
+      <input type="tel" v-model="additionalPhones[index]" :placeholder="t('settings.addPhone')" />
       <button type="button" @click="removePhone(index)">🗑️</button>
     </div>
     <div class="setting-item">
       <span class="placeholder-label"></span>
       <button class="add-button" type="button" @click="addPhone">
-        + Adicionar Telefone
+        {{ t('settings.addPhone') }}
       </button>
     </div>
   </div>
@@ -56,6 +58,7 @@ import { defineProps, defineEmits, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const { locale, t } = useI18n();
+
 const props = defineProps({
   notificationsEnabled: Boolean,
   notificationEmail: String,
@@ -89,7 +92,7 @@ function addEmail() {
 }
 
 function removeEmail(index: number) {
-  const confirmed = window.confirm('Deseja remover este email?');
+  const confirmed = window.confirm(t('settings.removeConfirmationEmail'));
   if (confirmed) {
     additionalEmails.value.splice(index, 1);
   }
@@ -100,7 +103,7 @@ function addPhone() {
 }
 
 function removePhone(index: number) {
-  const confirmed = window.confirm('Deseja remover este telefone?');
+  const confirmed = window.confirm(t('settings.removeConfirmationPhone'));
   if (confirmed) {
     additionalPhones.value.splice(index, 1);
   }
@@ -122,7 +125,6 @@ function removePhone(index: number) {
   flex-shrink: 0;
 }
 
-/* Override global input width:100% */
 .setting-item input {
   flex: 1;
   width: auto;

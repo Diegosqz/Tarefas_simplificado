@@ -1,5 +1,5 @@
 <template>
-  <BaseTooltipButton icon="📝" label="Editar" @click="$emit('edit')" />
+  <BaseTooltipButton icon="📝" :label="t('edit')" @click="emit('edit')" />
 </template>
 
 <script setup lang="ts">

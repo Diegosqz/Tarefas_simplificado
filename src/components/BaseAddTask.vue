@@ -1,7 +1,7 @@
 <template>
   <div class="add-task">
-    <input v-model="taskText" @keyup.enter="emitAdd" placeholder="Nova tarefa 📝" />
-    <BaseTooltipButton icon="➕" label="Adicionar" @click="emitAdd" />
+    <input v-model="taskText" @keyup.enter="emitAdd" placeholder="t('New_Task_📝')" />
+    <BaseTooltipButton icon="➕" label={{$t(Add)}} @click="emitAdd" />
   </div>
 </template>
 

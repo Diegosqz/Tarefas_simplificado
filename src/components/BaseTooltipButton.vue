@@ -1,6 +1,6 @@
 <template>
   <div class="tooltip-wrapper">
-    <button :title="label" :class="['tooltip-button', type]" @mouseenter="showTooltip = true"
+    <button type="button" :title="label" class="tooltip-button" :class="variant" @mouseenter="showTooltip = true"
       @mouseleave="showTooltip = false" @click="$emit('click')" :style="{ color: iconColor }">
       <slot>
         <!-- fallback: mostra o ícone se nenhum slot for passado -->
@@ -12,25 +12,29 @@
 </template>
 
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n'
-
 import { ref, computed, inject } from 'vue';
-const { locale, t } = useI18n();
-const isDark = inject('isDark', false)
+import { useI18n } from 'vue-i18n';
 
-const iconColor = computed(() => {
-  return isDark ? 'white' : 'black'
-})
+const { t } = useI18n();
+const isDark = inject<boolean>('isDark', false);
 
-defineProps<{
+// Props: 'variant' não conflita com atributo HTML 'type'
+const props = defineProps<{
   label: string;
   icon?: string;
-  type?: 'default' | 'primary' | 'danger';
+  variant?: 'default' | 'primary' | 'danger';
 }>();
 
-defineEmits(['click']);
+// Define emit do clique
+const emit = defineEmits<{
+  (e: 'click'): void;
+}>();
 
+// Tooltip visibility
 const showTooltip = ref(false);
+
+// Cor do ícone baseado no tema atual
+const iconColor = computed(() => (isDark ? '#fff' : '#000'));
 </script>
 
 <style scoped>
@@ -44,9 +48,7 @@ const showTooltip = ref(false);
   border: none;
   cursor: pointer;
   font-size: 0.7rem;
-  /* menor fonte, afeta emoji também */
   padding: 4px 8px;
-  /* reduzido */
   border-radius: 4px;
   background-color: transparent;
   color: inherit;
@@ -57,59 +59,21 @@ const showTooltip = ref(false);
   transition: background 0.2s;
 }
 
-.arrow.open {
-  transform: rotate(180deg);
-}
-
-.language-options {
-  margin-top: 5px;
-  background-color: #ffffff;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  position: absolute;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  padding: 5px;
-  z-index: 100;
-}
-
-.language-options span {
-  font-size: 18px;
-  padding: 5px;
-  cursor: pointer;
-}
-
-.language-options span:hover {
-  background-color: #f0f0f0;
-}
-
-
-.tooltip-button svg,
-.tooltip-button i {
-  width: 16px;
-  height: 16px;
-  font-size: 0.9rem;
-}
-
-/* estilos por tipo */
-.tooltip-button.default {
-  /*background-color: #f0f0f0;*/
-  /*color: #333;*/
+/* variantes de estilo */
+.default {
   background-color: var(--neutral-bg);
   color: var(--text-color);
   border: 1px solid var(--neutral-border);
 }
 
-.tooltip-button.primary {
-  background-color: #42b983;
-  color: white;
+.primary {
+  background-color: var(--primary-color);
+  color: #fff;
 }
 
-.tooltip-button.danger {
+.danger {
   background-color: #e74c3c;
-  color: white;
+  color: #fff;
 }
 
 /* tooltip */
@@ -119,7 +83,7 @@ const showTooltip = ref(false);
   left: 50%;
   transform: translateX(-50%);
   background-color: #333;
-  color: white;
+  color: #fff;
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 0.75rem;

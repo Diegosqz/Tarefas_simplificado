@@ -2,6 +2,7 @@
   "es": {
     "Hello, World": "¡Hola, Mundo!",
     "Olá, Mundo!": "¡Hola, Mundo!",
+    "List_of_Tasks":"Listas de pendientes",
     "tabs": {
       "notifications": "Notificaciones",
       "user": "Usuario"
@@ -16,13 +17,31 @@
       "removeConfirmationEmail": "¿Desea eliminar este correo?",
       "phone": "Teléfono",
       "addPhone": "+ Agregar teléfono",
-      "removeConfirmationPhone": "¿Desea eliminar este teléfono?"
+      "removeConfirmationPhone": "¿Desea eliminar este teléfono?",
+      "insertorname": "Introduce tu nombre"
     },
     "user": {
       "name": "Nombre",
       "birthdate": "Fecha de nacimiento",
       "save": "Guardar configuración",
       "cancel": "Cancelar"
-    }
+    },
+"ButtonTask":{
+  "edit":"Editar",
+  "delete":"Excluir",
+  "Add":"Agregar",
+  "New_Task_📝":"Nueva Tarea 📝"
+},
+"LanguageSettings":{
+  "Language":"Idioma",
+  "Portuguese": "Português",
+  "English":"Inglês",
+  "Spanish": "Espanõl"
+},
+"ThemeSettings":{
+  "theme":"Tema",
+  "light":"Luz",
+  "dark":"Oscuridad"
   }
+}
 }

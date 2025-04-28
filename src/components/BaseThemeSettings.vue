@@ -1,9 +1,9 @@
 <template>
   <div class="setting-item">
-    <label for="theme">Tema:</label>
+    <label for="theme">{{ $t(theme) }}:</label>
     <select id="theme" :value="selectedTheme" @input="updateTheme($event)">
-      <option value="light">Claro</option>
-      <option value="dark">Escuro</option>
+      <option value="light">{{ t('light') }}</option>
+      <option value="dark">{{ t('dark') }}</option>
     </select>
   </div>
 </template>

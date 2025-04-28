@@ -2,10 +2,12 @@
   <div>
     <!-- Componente de Usuário (nome e idade) -->
     <div class="setting-item">
-      <label for="name">Nome</label>
-      <input id="name" v-model="localUserName" placeholder="Insira seu nome" required />
+      <label for="name">{{ t(name.message) }}
+      </label>
+      <input id="name" v-model="localUserName" :placeholder="t('insertorname.message')" required />
 
-      <label for="dn">Data de nascimento</label>
+      <label for="dn">{{ t('birthdate.message') }}
+      </label>
       <input id="dn" type="date" v-model="localDn" required />
     </div>
 

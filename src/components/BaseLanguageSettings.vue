@@ -1,39 +1,39 @@
 <template>
   <div class="setting-item">
-    <label for="language">Idioma:</label>
-    <select id="language" :value="selectedLanguage" @input="updateLanguage($event)">
-      <option value="pt" :title="'Português'">
-        <FlagIcon iso="br" /> Português
+    <label for="language">{{ t('LanguageSettings.Language') }}:</label>
+    <select id="language" :value="selectedLanguage" @change="onChange">
+      <option value="pt">
+        <FlagIcon iso="br" /> {{ t('LanguageSettings.Portuguese') }}
       </option>
-      <option value="en" :title="'Inglês'">
-        <FlagIcon iso="us" /> Inglês
+      <option value="en">
+        <FlagIcon iso="us" /> {{ t('LanguageSettings.English') }}
       </option>
-      <option value="es" :title="'Espanhol'">
-        <FlagIcon iso="es" /> Espanhol
+      <option value="es">
+        <FlagIcon iso="es" /> {{ t('LanguageSettings.Espanhol') }}
       </option>
     </select>
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { defineProps, defineEmits, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+import 'vue-flag-icon';
+const props = defineProps<{ selectedLanguage: string }>()
+const emit = defineEmits<{
+  (e: 'update:selectedLanguage', v: string): void
+}>()
 
-const { locale, t } = useI18n();
-// Prop recebida do componente pai
-const props = defineProps({
-  selectedLanguage: String,
-});
+const { locale, t } = useI18n()
 
-// Emitir evento para atualizar o valor de selectedLanguage
-const emit = defineEmits(['update:selectedLanguage']);
+// Sincroniza o i18n
+watch(() => props.selectedLanguage, v => {
+  if (v) locale.value = v
+})
 
-function updateLanguage(event: Event) {
-  const target = event.target as HTMLSelectElement;
-  emit('update:selectedLanguage', target.value);
+function onChange(event: Event) {
+  const v = (event.target as HTMLSelectElement).value
+  emit('update:selectedLanguage', v)
+  locale.value = v
 }
 </script>
-
-<style scoped>
-/* Aqui você pode adicionar estilos personalizados para o seu componente */
-</style>

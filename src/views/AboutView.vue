@@ -23,7 +23,7 @@
     </div>
 
     <div class="task-app">
-      <h1>Lista de Tarefas</h1>
+      <h1>{{ $t('List_of_Tasks') }}</h1>
 
       <!-- Linha com botão de adicionar e configurações lado a lado -->
       <div class="top-bar">
@@ -42,7 +42,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n'
 import baseAddTask from '@/components/BaseAddTask.vue';
 import baseTaskList from '@/components/BaseTaskList.vue';
 import BaseTooltipButton from '@/components/BaseTooltipButton.vue';
@@ -50,7 +49,6 @@ import BaseTooltipButton from '@/components/BaseTooltipButton.vue';
 const tasks = ref<{ id: number; text: string; completed: boolean }[]>([]);
 const nextId = ref(1);
 const router = useRouter();
-const { locale } = useI18n();
 const currentLanguage = ref('pt');
 const languageMenuVisible = ref(false);
 const availableLanguages = ['en', 'pt', 'es'];

@@ -11,7 +11,7 @@
 
 
 <script setup lang="ts">
-import baseDeleteTask from './baseDeleteTask.vue';
+import baseDeleteTask from './BaseDeleteTask.vue';
 import BaseEditTask from './BaseEditTask.vue';
 import { useI18n } from 'vue-i18n';
 
