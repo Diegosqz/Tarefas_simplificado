@@ -1,95 +1,105 @@
 <template>
   <div class="settings-page">
     <div class="settings-header">
-      <h1>Configurações</h1>
-      <!-- Abas horizontais -->
+      <h1>{{ t('Settings.title') }}</h1>
+      <!-- Abas horizontais com ícones -->
       <div class="tabs">
         <button class="tab-button" :class="{ active: activeTab === 'notifications' }"
-          @click="activeTab = 'notifications'">
-          Notificações
+          @click="activeTab = 'notifications'" aria-label="Notificações">
+          <BellIcon />
         </button>
-        <button class="tab-button" :class="{ active: activeTab === 'user' }" @click="activeTab = 'user'">
-          Usuário
+        <button class="tab-button" :class="{ active: activeTab === 'user' }" @click="activeTab = 'user'"
+          aria-label="Usuário">
+          <UserIcon />
         </button>
       </div>
     </div>
+
     <!-- Conteúdo das configurações com base na aba selecionada -->
     <div class="settings-content">
       <div v-if="activeTab === 'notifications'">
-        <BaseNotificationSettings :notificationsEnabled="notificationsEnabled" :notificationEmail="notificationEmail"
+        <BaseNotificationSettings :icon-email="MailIcon" :icon-phone="PhoneIcon"
+          :notificationsEnabled="notificationsEnabled" :notificationEmail="notificationEmail"
           :notificationPhone="notificationPhone" @update:notificationsEnabled="notificationsEnabled = $event"
           @update:notificationEmail="notificationEmail = $event"
           @update:notificationPhone="notificationPhone = $event" />
       </div>
       <div v-if="activeTab === 'user'">
-        <BaseUserSettings :userName="userName" :dn="dn" :email="email" @update:userName="userName = $event"
-          @update:dn="dn = $event" @update:email="email = $event" />
+        <BaseUserSettings :icon-name="UserIcon" :icon-dn="CalendarIcon" :icon-email="MailIcon" :userName="userName"
+          :dn="dn" :email="email" @update:userName="userName = $event" @update:dn="dn = $event"
+          @update:email="email = $event" />
       </div>
-
     </div>
+
     <BaseActionButtons :isFormValid="isFormValid" @save="saveSettings" />
   </div>
-
-
 </template>
-
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+// Import de ícones (lucide-vue-next)
+import { BellIcon, UserIcon, MailIcon, PhoneIcon, CalendarIcon } from 'lucide-vue-next';
+
 import BaseNotificationSettings from '@/components/BaseNotificationSettings.vue';
-import BaseActionButtons from '@/components/BaseActionsButtons.vue';
 import BaseUserSettings from '@/components/BaseUserSettings.vue';
+import BaseActionButtons from '@/components/BaseActionsButtons.vue';
 
 const { t } = useI18n();
+const router = useRouter();
 
-const availableTabs = ['notifications', 'user'];
-const activeTab = ref(availableTabs[0]);
+const activeTab = ref<'notifications' | 'user'>('notifications');
 
+// Estados das configurações
 const notificationsEnabled = ref(true);
 const notificationEmail = ref('');
 const notificationPhone = ref('');
 const userName = ref('');
 const dn = ref('');
 const email = ref('');
-const router = useRouter();
 
-const isFormValid = computed(() => userName.value && dn.value && email.value);
+const isFormValid = computed(() => !!userName.value && !!dn.value && !!email.value);
 
 function saveSettings() {
-  alert(`${t('user.save')}:
-    ${t('user.name')}: ${userName.value}
-    ${t('user.birthdate')}: ${dn.value}
-    ${t('settings.email')}: ${email.value}`);
+  alert(
+    `${t('user.save')}:\n` +
+    `${userName.value} - ${t('user.name')}\n` +
+    `${dn.value} - ${t('user.birthdate')}\n` +
+    `${email.value} - ${t('settings.email')}`
+  );
   router.push({ name: 'AboutView' });
 }
 </script>
-<!--<div v-if="activeTab === 'language'">
-        <BaseLanguageSettings :selectedLanguage="selectedLanguage"
-          @update:selectedLanguage="selectedLanguage = $event" />
-      </div>-->
-<!--<div v-if="activeTab === 'user'">
-       Componente de Usuário (nome e idade)
-        <div class="setting-item">
-          <label for="name">Nome</label>
-          <input id="name" v-model="userName" placeholder="Insira seu nome" required />
-          <label for="dn">Data de nascimento</label>
-          <input id="dn" type="date" v-model="dn" required />
-        </div>
-         Campo de Email
-        <div class="setting-item">
-          <label for="email">Email:</label>
-          <input id="email" type="email" v-model="email" placeholder="exemplo@email.com" />
-        </div>
-      </div>-->
-<!--<button class="tab-button" :class="{ active: activeTab === 'language' }" @click="activeTab = 'language'">
-          Idioma
-        </button>-->
-<!--<div v-if="activeTab === 'theme'">
-        <BaseThemeSettings :selectedTheme="selectedTheme" @update:selectedTheme="selectedTheme = $event" />
-      </div>-->
-<!-- Botões de ação -->
-<!--<button class="tab-button" :class="{ active: activeTab === 'theme' }" @click="activeTab = 'theme'">
-          Tema
-        </button>-->
+
+<style scoped>
+.tabs {
+  display: flex;
+  gap: 16px;
+}
+
+.tab-button {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: var(--text-color);
+  transition: color 0.2s, background 0.2s;
+}
+
+.tab-button.active {
+  color: var(--primary-color);
+}
+
+.tab-button:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.settings-content {
+  margin-top: 20px;
+}
+</style>

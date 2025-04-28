@@ -2,7 +2,7 @@
   <div>
     <!-- Notificações -->
     <div class="setting-item">
-      <label for="notifications">{{ t('settings.notifications') }}:</label>
+      <label for="Notificações">{{ t('settings.notifications') }}:</label>
       <div class="status-toggle">
         <span>
           {{ notificationsEnabled ? t('settings.enabled') : t('settings.disabled') }}
@@ -150,5 +150,16 @@ function removePhone(index: number) {
 
 .add-button:hover {
   background: #0056b3;
+}
+
+.page-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  /* largura máxima da "tela" */
+  margin: 0 auto;
+  /* centraliza horizontalmente */
+  padding: 20px;
+  /* espaço interno */
+  box-sizing: border-box;
 }
 </style>

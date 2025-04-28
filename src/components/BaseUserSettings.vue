@@ -2,18 +2,22 @@
   <div>
     <!-- Componente de Usuário (nome e idade) -->
     <div class="setting-item">
-      <label for="name">{{ t('user.name') }}
+      <label for="name" class="input-label">
+        <UserIcon class="icon" aria-hidden="true" />
       </label>
-      <input id="name" v-model="localUserName" :placeholder="t('insertorname.settings')" required />
+      <input id="name" v-model="localUserName" :placeholder="t('settings.insertorname')" required />
 
-      <label for="dn">{{ t('user.birthdate') }}
+      <label for="dn" class="input-label">
+        <CalendarIcon class="icon" aria-hidden="true" />
       </label>
       <input id="dn" type="date" v-model="localDn" required />
     </div>
 
     <!-- Campo de Email -->
     <div class="setting-item">
-      <label for="email">Email:</label>
+      <label for="email" class="input-label">
+        <MailIcon class="icon" aria-hidden="true" />
+      </label>
       <input id="email" type="email" v-model="localEmail" placeholder="exemplo@email.com" />
     </div>
   </div>
@@ -22,6 +26,8 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { UserIcon, CalendarIcon, MailIcon } from 'lucide-vue-next';
+
 const { t } = useI18n();
 
 // Props
@@ -54,5 +60,24 @@ watch(localEmail, (val) => emit('update:email', val));
   display: flex;
   flex-direction: row;
   gap: 8px;
+  align-items: center;
+}
+
+.input-label {
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  width: 1.2rem;
+  height: 1.2rem;
+  color: var(--text-color);
+}
+
+.setting-item input {
+  flex: 1;
+  padding: 6px 8px;
 }
 </style>
