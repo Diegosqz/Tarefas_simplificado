@@ -2,11 +2,11 @@
   <div>
     <!-- Componente de Usuário (nome e idade) -->
     <div class="setting-item">
-      <label for="name">{{ t(name.message) }}
+      <label for="name">{{ t('user.name') }}
       </label>
-      <input id="name" v-model="localUserName" :placeholder="t('insertorname.message')" required />
+      <input id="name" v-model="localUserName" :placeholder="t('insertorname.settings')" required />
 
-      <label for="dn">{{ t('birthdate.message') }}
+      <label for="dn">{{ t('user.birthdate') }}
       </label>
       <input id="dn" type="date" v-model="localDn" required />
     </div>
@@ -21,6 +21,8 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 
 // Props
 const props = defineProps<{
