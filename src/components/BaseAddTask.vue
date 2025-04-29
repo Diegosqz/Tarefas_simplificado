@@ -1,7 +1,7 @@
 <template>
   <div class="add-task">
-    <input v-model="taskText" @keyup.enter="emitAdd" placeholder="t('New_Task_📝')" />
-    <BaseTooltipButton icon="➕" label={{$t(Add)}} @click="emitAdd" />
+    <input v-model="taskText" @keyup.enter="emitAdd" :placeholder="t('ButtonTask.New_Task_📝')" />
+    <BaseTooltipButton icon="➕" label={{$t(Add)}} @click="emitAdd" class="add-button" />
   </div>
 </template>
 
@@ -14,7 +14,6 @@ const { locale, t } = useI18n();
 const taskText = ref('');
 const showTooltip = ref(false);
 const emit = defineEmits(['add']);
-
 function emitAdd() {
   const text = taskText.value.trim();
   if (text) {
@@ -52,6 +51,15 @@ button {
   color: white;
   cursor: pointer;
 }
+
+body.dark .add-button {
+  color: white;
+}
+
+body.light .add-button {
+  color: black;
+}
+
 
 /* Tooltip estilo flutuante */
 .tooltip {

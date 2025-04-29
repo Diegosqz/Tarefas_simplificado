@@ -60,7 +60,6 @@ function toggleTheme() {
   currentTheme.value = currentTheme.value === 'light' ? 'dark' : 'light';
   document.body.classList.toggle('dark-theme', currentTheme.value === 'dark'); // Adiciona a classe para o body
   localStorage.setItem('theme', currentTheme.value); // Salva a escolha no localStorage
-
   document.body.classList.remove('light', 'dark');
   document.body.classList.add(currentTheme.value);
 }
