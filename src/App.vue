@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import { ref, watch } from 'vue'
+
 </script>
 
 <template>
@@ -10,6 +13,20 @@ import { RouterLink, RouterView } from 'vue-router'
 </template>
 
 <style scoped>
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: var(--neutral-bg);
+  border-bottom: 1px solid var(--neutral-border);
+}
+
+.controls>* {
+  margin-left: 1rem;
+}
+
+
 header {
   line-height: 1.5;
   max-height: 100vh;
