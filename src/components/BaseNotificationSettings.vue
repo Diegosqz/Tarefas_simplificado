@@ -1,64 +1,84 @@
 <template>
+
   <div>
+
     <!-- Notificações -->
+
     <div class="setting-item">
-      <label for="Notificações">{{ t('settings.notifications') }}:</label>
+
+      <label for="Notificações">{{ $t('pt-BR.settings.notifications') }}:</label>
+
       <div class="status-toggle">
+
         <span>
-          {{ notificationsEnabled ? t('settings.enabled') : t('settings.disabled') }}
+
+          {{ notificationsEnabled ? $t('pt-BR.settings.enabled') : $t('pt-BR.settings.disabled') }}
+
         </span>
         <input id="notifications" type="checkbox" :checked="notificationsEnabled" @change="updateNotifications" />
       </div>
     </div>
 
+
     <!-- Email principal -->
+
     <div class="setting-item">
-      <label for="notification-email">{{ t('settings.email') }}:</label>
+      <label for="notification-email">{{ $t('pt-BR.settings.email') }}:</label>
       <input id="notification-email" type="email" :value="notificationEmail" @input="updateEmail"
-        :placeholder="t('settings.email')" />
+        :placeholder="$t('pt-BR.settings.email')" />
     </div>
 
+
     <!-- Emails adicionais -->
+
     <div v-for="(email, index) in additionalEmails" :key="`extra-email-${index}`" class="setting-item">
       <label class="placeholder-label"></label>
-      <input type="email" v-model="additionalEmails[index]" :placeholder="t('settings.addEmail')" />
+      <input type="email" v-model="additionalEmails[index]" :placeholder="$t('pt-BR.settings.addEmail')" />
       <button type="button" @click="removeEmail(index)">🗑️</button>
     </div>
+
     <div class="setting-item">
       <span class="placeholder-label"></span>
       <button class="add-button" type="button" @click="addEmail">
-        {{ t('settings.addEmail') }}
+        {{ $t('pt-BR.settings.addEmail') }}
       </button>
     </div>
 
+
     <!-- Telefone principal -->
+
     <div class="setting-item">
-      <label for="notification-phone">{{ t('settings.phone') }}:</label>
+      <label for="notification-phone">{{ $t('pt-BR.settings.phone') }}:</label>
       <input id="notification-phone" type="tel" :value="notificationPhone" @input="updatePhone"
-        :placeholder="t('settings.phone')" />
+        :placeholder="$t('pt-BR.settings.phone')" />
     </div>
 
+
     <!-- Telefones adicionais -->
+
     <div v-for="(phone, index) in additionalPhones" :key="`extra-phone-${index}`" class="setting-item">
       <label class="placeholder-label"></label>
-      <input type="tel" v-model="additionalPhones[index]" :placeholder="t('settings.addPhone')" />
+      <input type="tel" v-model="additionalPhones[index]" :placeholder="$t('pt-BR.settings.addPhone')" />
       <button type="button" @click="removePhone(index)">🗑️</button>
     </div>
     <div class="setting-item">
       <span class="placeholder-label"></span>
       <button class="add-button" type="button" @click="addPhone">
-        {{ t('settings.addPhone') }}
+        {{ $t('pt-BR.settings.addPhone') }}
       </button>
     </div>
   </div>
+
 </template>
 
+
 <script setup lang="ts">
+
 import { defineProps, defineEmits, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-const { locale, t } = useI18n();
 
+const { locale, t } = useI18n();
 const props = defineProps({
   notificationsEnabled: Boolean,
   notificationEmail: String,
@@ -71,44 +91,43 @@ const emit = defineEmits([
   'update:notificationPhone',
 ]);
 
+
 const additionalEmails = ref<string[]>([]);
 const additionalPhones = ref<string[]>([]);
+
 
 function updateNotifications(event: Event) {
   const target = event.target as HTMLInputElement;
   emit('update:notificationsEnabled', target.checked);
 }
-
 function updateEmail(event: Event) {
   emit('update:notificationEmail', (event.target as HTMLInputElement).value);
 }
-
 function updatePhone(event: Event) {
   emit('update:notificationPhone', (event.target as HTMLInputElement).value);
 }
-
 function addEmail() {
   additionalEmails.value.push('');
 }
-
 function removeEmail(index: number) {
-  const confirmed = window.confirm(t('settings.removeConfirmationEmail'));
+  const confirmed = window.confirm(t('pt-BR.settings.removeConfirmationEmail'));
   if (confirmed) {
     additionalEmails.value.splice(index, 1);
   }
-}
 
+}
 function addPhone() {
   additionalPhones.value.push('');
 }
-
 function removePhone(index: number) {
-  const confirmed = window.confirm(t('settings.removeConfirmationPhone'));
+  const confirmed = window.confirm(t('pt-BR.settings.removeConfirmationPhone'));
   if (confirmed) {
     additionalPhones.value.splice(index, 1);
   }
 }
+
 </script>
+
 
 <style scoped>
 .setting-item {

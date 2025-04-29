@@ -1,6 +1,6 @@
 <template>
   <div class="add-task">
-    <input v-model="taskText" @keyup.enter="emitAdd" :placeholder="t('ButtonTask.New_Task_📝')" />
+    <input v-model="taskText" @keyup.enter="emitAdd" :placeholder="t('pt-BR.ButtonTask.New_Task_📝')" />
     <BaseTooltipButton icon="➕" label={{$t(Add)}} @click="emitAdd" class="add-button" />
   </div>
 </template>

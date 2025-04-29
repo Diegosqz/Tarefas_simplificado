@@ -3,13 +3,13 @@
     <label for="language">{{ t('LanguageSettings.Language') }}:</label>
     <select id="language" :value="selectedLanguage" @change="onChange">
       <option value="pt">
-        <FlagIcon iso="br" /> {{ t('LanguageSettings.Portuguese') }}
+        <FlagIcon iso="br" /> {{ t('pt-BR.LanguageSettings.Portuguese') }}
       </option>
       <option value="en">
-        <FlagIcon iso="us" /> {{ t('LanguageSettings.English') }}
+        <FlagIcon iso="us" /> {{ t('pt-BR.LanguageSettings.English') }}
       </option>
       <option value="es">
-        <FlagIcon iso="es" /> {{ t('LanguageSettings.Espanhol') }}
+        <FlagIcon iso="es" /> {{ t('pt-BR.LanguageSettings.Espanhol') }}
       </option>
     </select>
   </div>

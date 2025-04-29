@@ -13,7 +13,6 @@
           {{ getFlag(lang) }}
         </span>
       </div>
-
       <!-- Botão de alternância de tema com tooltip -->
       <BaseTooltipButton label="Alternar Tema" @click="toggleTheme">
         <div class="theme-switcher">
@@ -21,10 +20,8 @@
         </div>
       </BaseTooltipButton>
     </div>
-
     <div class="task-app">
-      <h1>{{ $t('List_of_Tasks') }}</h1>
-
+      <h1>{{ $t('pt-BR.List_of_Tasks') }}</h1>
       <!-- Linha com botão de adicionar e configurações lado a lado -->
       <div class="top-bar">
         <baseAddTask @add="addTask" />
@@ -32,12 +29,18 @@
           ⚙️
         </BaseTooltipButton>
       </div>
-
+      <hr>
+      <div>
+        <p>teste</p>
+        <hr>
+      </div>
       <!-- Lista de tarefas -->
       <baseTaskList :tasks="tasks" @edit="editTask" @delete="deleteTask" />
     </div>
   </div>
+
 </template>
+
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
@@ -46,16 +49,16 @@ import baseAddTask from '@/components/BaseAddTask.vue';
 import baseTaskList from '@/components/BaseTaskList.vue';
 import BaseTooltipButton from '@/components/BaseTooltipButton.vue';
 
+
 const tasks = ref<{ id: number; text: string; completed: boolean }[]>([]);
 const nextId = ref(1);
 const router = useRouter();
 const currentLanguage = ref('pt');
 const languageMenuVisible = ref(false);
 const availableLanguages = ['en', 'pt', 'es'];
-
 const currentTheme = ref(localStorage.getItem('theme') || 'light'); // Recupera o tema salvo ou usa 'light' como padrão
-
 // Função para alternar entre os temas
+
 function toggleTheme() {
   currentTheme.value = currentTheme.value === 'light' ? 'dark' : 'light';
   document.body.classList.toggle('dark-theme', currentTheme.value === 'dark'); // Adiciona a classe para o body
@@ -64,21 +67,21 @@ function toggleTheme() {
   document.body.classList.add(currentTheme.value);
 }
 
+
 // Função para mudar o idioma
+
 function toggleLanguageMenu() {
   languageMenuVisible.value = !languageMenuVisible.value;
 }
-
 const otherLanguages = computed(() =>
   availableLanguages.filter(lang => lang !== currentLanguage.value)
 );
-
 function changeLanguage(lang: string) {
   currentLanguage.value = lang;
   languageMenuVisible.value = false;
   console.log(`Idioma trocado para: ${lang}`);
-}
 
+}
 function getFlag(lang: string): string {
   switch (lang) {
     case 'pt':
@@ -91,15 +94,12 @@ function getFlag(lang: string): string {
       return '🌐';
   }
 }
-
 function addTask(text: string) {
   tasks.value.push({ id: nextId.value++, text, completed: false });
 }
-
 function deleteTask(id: number) {
   tasks.value = tasks.value.filter(task => task.id !== id);
 }
-
 function editTask(id: number) {
   const task = tasks.value.find(task => task.id === id);
   if (task) {
@@ -109,16 +109,15 @@ function editTask(id: number) {
     }
   }
 }
-
 function openSettings() {
   router.push('/configuracoes');
 }
-
 onMounted(() => {
   if (currentTheme.value === 'dark') {
     document.body.classList.add('dark-theme');
   }
 });
+
 </script>
 
 <style scoped>

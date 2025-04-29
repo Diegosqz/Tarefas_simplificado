@@ -1,7 +1,7 @@
 <template>
   <div class="settings-page">
     <div class="settings-header">
-      <h1>{{ t('Settings.title') }}</h1>
+      <h1>{{ t('pt-BR.Settings.title') }}</h1>
       <!-- Abas horizontais com ícones -->
       <div class="tabs">
         <button class="tab-button" :class="{ active: activeTab === 'notifications' }"
@@ -41,14 +41,12 @@ import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 // Import de ícones (lucide-vue-next)
 import { BellIcon, UserIcon, MailIcon, PhoneIcon, CalendarIcon } from 'lucide-vue-next';
-
 import BaseNotificationSettings from '@/components/BaseNotificationSettings.vue';
 import BaseUserSettings from '@/components/BaseUserSettings.vue';
 import BaseActionButtons from '@/components/BaseActionsButtons.vue';
 
 const { t } = useI18n();
 const router = useRouter();
-
 const activeTab = ref<'notifications' | 'user'>('notifications');
 
 // Estados das configurações
@@ -58,15 +56,14 @@ const notificationPhone = ref('');
 const userName = ref('');
 const dn = ref('');
 const email = ref('');
-
 const isFormValid = computed(() => !!userName.value && !!dn.value && !!email.value);
 
 function saveSettings() {
   alert(
-    `${t('user.save')}:\n` +
-    `${userName.value} - ${t('user.name')}\n` +
-    `${dn.value} - ${t('user.birthdate')}\n` +
-    `${email.value} - ${t('settings.email')}`
+    `${t('pt-BR.user.save')}:\n` +
+    `${userName.value} - ${t('pt-BR.user.name')}\n` +
+    `${dn.value} - ${t('pt-BR.user.birthdate')}\n` +
+    `${email.value} - ${t('pt-BR.settings.email')}`
   );
   router.push({ name: 'AboutView' });
 }
