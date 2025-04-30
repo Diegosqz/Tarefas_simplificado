@@ -20,16 +20,18 @@
     </div>
 
     <div class="task-app">
-      <h1>{{ $t('pt-BR.List_of_Tasks') }}</h1>
+      <div class="task-content">
+        <h1>{{ $t('pt-BR.List_of_Tasks') }}</h1>
 
-      <div class="top-bar">
-        <baseAddTask @add="addTask" />
-        <BaseTooltipButton label="Configurações" @click="openSettings">
-          ⚙️
-        </BaseTooltipButton>
+        <div class="top-bar">
+          <baseAddTask @add="addTask" />
+          <BaseTooltipButton label="Configurações" @click="openSettings">
+            ⚙️
+          </BaseTooltipButton>
+        </div>
+
+        <baseTaskList :tasks="filteredTasks" @edit="editTask" @delete="deleteTask" />
       </div>
-
-      <baseTaskList :tasks="filteredTasks" @edit="editTask" @delete="deleteTask" />
     </div>
   </div>
 </template>
@@ -119,11 +121,21 @@ onMounted(() => {
   box-shadow: var(--box-shadow-light);
 }
 
+.task-app h1 {
+
+  text-align: center;
+  /* Alinhar ao centro, por exemplo */
+}
+
 .top-bar {
   display: flex;
+  justify-content: center;
+  /* Alinha os itens ao centro */
   align-items: stretch;
-  gap: 10px;
-  margin-bottom: 14px;
+  gap: 3px;
+  margin-left: calc(50% - 190px);
+  /*ajusta o imput e o label*/
+  margin-bottom: 15px;
 }
 
 .top-bar button {
@@ -136,7 +148,7 @@ onMounted(() => {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 6px;
+  gap: 3px;
   position: absolute;
   top: 20px;
   right: 19px;
@@ -208,5 +220,17 @@ body.dark-theme .task-app {
 
 .page-wrapper {
   position: relative;
+}
+
+.task-content {
+  max-width: 600;
+  margin: 0 auto;
+  /* Centraliza título e top-bar juntos */
+}
+
+.task-content h1 {
+  text-align: center;
+  /* Alinha o título à esquerda dentro da largura fixa */
+  margin-bottom: 3px;
 }
 </style>

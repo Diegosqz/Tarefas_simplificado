@@ -28,9 +28,11 @@ function emitAdd() {
   display: flex;
   gap: 8px;
   margin-bottom: 16px;
+  align-items: center;
 }
 
 input {
+  width: 100%;
   flex: 1;
   padding: 8px;
   border: 1px solid #ccc;

@@ -25,10 +25,16 @@
   <transition-group name="fade" tag="ul" class="task-list">
     <li v-for="task in sortedTasks" :key="task.id"
       :class="['task-item', { completed: task.completed, deleted: task.deleted }]">
+
       <!-- 1) Texto e checkbox -->
       <div class="task-info">
         <input type="checkbox" v-model="task.completed" @change="updateTaskState(task)" />
-        <span class="task-text">{{ task.text }}</span>
+
+        <span v-if="editingTask !== task.id" @click="startEditing(task)">
+          {{ task.text }}
+        </span>
+
+        <input v-else v-model="editedText" @blur="saveEdit(task)" @keyup.enter="saveEdit(task)" class="edit-input" />
       </div>
 
       <!-- 2) Seleção de prioridade -->
@@ -82,6 +88,10 @@ const emit = defineEmits<{
 // Filtro ativo
 const filter = ref<'low' | 'medium' | 'high' | 'all' | 'completed' | 'deleted'>('all');
 
+// Estado de edição
+const editingTask = ref<number | null>(null); // Armazena o ID da tarefa sendo editada
+const editedText = ref<string>(''); // Armazena o texto editado
+
 // Atualiza prioridade
 function setPriority(id: number, priority: 'low' | 'medium' | 'high') {
   const task = tasks.find(t => t.id === id);
@@ -104,6 +114,20 @@ function deleteTask(id: number) {
     task.deleted = true;  // Marca como excluída
     task.completed = false;  // A tarefa não pode ser marcada como completada se excluída
   }
+}
+
+// Inicia o modo de edição para a tarefa
+function startEditing(task: Task) {
+  editingTask.value = task.id;
+  editedText.value = task.text; // Armazena o texto original para edição
+}
+
+// Salva a edição e atualiza o texto da tarefa
+function saveEdit(task: Task) {
+  if (editingTask.value === task.id && editedText.value !== task.text) {
+    task.text = editedText.value; // Atualiza o texto da tarefa
+  }
+  editingTask.value = null; // Sai do modo de edição
 }
 
 // Ordenação e filtragem de tarefas
@@ -172,7 +196,6 @@ const deletedCount = computed(() => tasks.filter(t => t.deleted).length); // Con
 
 .filter-btn.deleted {
   color: #dc3545;
-  /* Você pode escolher uma cor diferente para as excluídas */
 }
 
 .filter-btn.active {
@@ -269,6 +292,17 @@ const deletedCount = computed(() => tasks.filter(t => t.deleted).length); // Con
   color: #ccc;
   text-decoration: line-through;
   font-style: italic;
+}
+
+/* Estilo para o campo de edição inline */
+.edit-input {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  margin-left: 0.5rem;
 }
 
 /* Transição suave ao desaparecer/aparecer */

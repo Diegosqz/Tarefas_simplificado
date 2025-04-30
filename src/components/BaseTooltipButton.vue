@@ -48,7 +48,7 @@ const iconColor = computed(() => (isDark ? '#fff' : '#000'));
   border: none;
   cursor: pointer;
   font-size: 0.7rem;
-  padding: 4px 8px;
+  padding: 4px 4px;
   border-radius: 4px;
   background-color: transparent;
   color: inherit;
