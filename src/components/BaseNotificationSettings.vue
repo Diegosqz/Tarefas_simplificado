@@ -1,24 +1,16 @@
 <template>
-
   <div>
 
     <!-- Notificações -->
-
     <div class="setting-item">
-
       <label for="Notificações">{{ $t('pt-BR.Settings.notifications') }}:</label>
-
       <div class="status-toggle">
-
         <span>
-
           {{ notificationsEnabled ? $t('pt-BR.Settings.enabled') : $t('pt-BR.Settings.disabled') }}
-
         </span>
         <input id="notifications" type="checkbox" :checked="notificationsEnabled" @change="updateNotifications" />
       </div>
     </div>
-
 
     <!-- Email principal -->
 
@@ -27,7 +19,6 @@
       <input id="notification-email" type="email" :value="notificationEmail" @input="updateEmail"
         :placeholder="$t('pt-BR.Settings.email')" />
     </div>
-
 
     <!-- Emails adicionais -->
 
@@ -44,7 +35,6 @@
       </button>
     </div>
 
-
     <!-- Telefone principal -->
 
     <div class="setting-item">
@@ -52,7 +42,6 @@
       <input id="notification-phone" type="tel" :value="notificationPhone" @input="updatePhone"
         :placeholder="$t('pt-BR.Settings.phone')" />
     </div>
-
 
     <!-- Telefones adicionais -->
 
@@ -74,8 +63,42 @@
 
 <script setup lang="ts">
 
-import { defineProps, defineEmits, ref } from 'vue';
+import { defineProps, defineEmits, ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+const currentLanguage = ref('pt');
+const languageMenuVisible = ref(false);
+const availableLanguages = ['en', 'pt', 'es'];
+const currentTheme = ref(localStorage.getItem('theme') || 'light');
+
+// Alternar tema claro/escuro
+function toggleTheme() {
+  currentTheme.value = currentTheme.value === 'light' ? 'dark' : 'light';
+  document.body.classList.toggle('dark-theme', currentTheme.value === 'dark');
+  localStorage.setItem('theme', currentTheme.value);
+  document.body.classList.remove('light', 'dark');
+  document.body.classList.add(currentTheme.value);
+}
+
+// Menu de idiomas
+function toggleLanguageMenu() {
+  languageMenuVisible.value = !languageMenuVisible.value;
+}
+const otherLanguages = computed(() => availableLanguages.filter(lang => lang !== currentLanguage.value));
+function changeLanguage(lang: string) {
+  watch(currentLanguage, (lang) => {
+    locale.value = lang;
+  });
+  languageMenuVisible.value = false;
+  console.log(`Idioma trocado para: ${lang}`);
+}
+function getFlag(lang: string): string {
+  switch (lang) {
+    case 'pt': return '🇧🇷';
+    case 'en': return '🇺🇸';
+    case 'es': return '🇪🇸';
+    default: return '🌐';
+  }
+}
 
 
 const { locale, t } = useI18n();
@@ -114,7 +137,6 @@ function removeEmail(index: number) {
   if (confirmed) {
     additionalEmails.value.splice(index, 1);
   }
-
 }
 function addPhone() {
   additionalPhones.value.push('');
