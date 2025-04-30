@@ -3,180 +3,32 @@
   --neutral-bg: #ffffff;
   --neutral-border: #ccc;
   --box-shadow-light: 0 4px 12px rgba(0, 0, 0, 0.05);
-  --box-shadow-regular: 0 4px 10px rgba(0, 0, 0, 0.1);
   --border-radius: 8px;
   --font-base: Arial, sans-serif;
+  --page-padding: 20px;
+  --page-max-width: 600px;
   font-family: 'Inter', sans-serif;
   font-size: 16px;
   line-height: 1.5;
   color: #333;
 }
 
-/* Tema claro */
-body.light {
-  --neutral-bg: #ffffff;
-  --text-color: #000000;
-  --neutral-border: #ccc;
-  --input-bg: #ffffff;
-}
-
-/* Tema escuro */
-body.dark {
-  --neutral-bg: #121212;
-  --text-color: #f5f5f5;
-  --neutral-border: #444;
-  --input-bg: #1e1e1e;
-}
-
-/* Tipografia base */
-body {
-  font-family: var(--font-base);
+body.light, body.dark {
   background-color: var(--neutral-bg);
   color: var(--text-color);
   transition: background-color 0.3s, color 0.3s;
 }
 
-body.dark .add-button {
-  color: white;
-}
-
-body.light .add-button {
-  color: black;
-}
-
-
-h1 {
-  font-size: 2rem;
-  margin-bottom: 16px;
-}
-
-/* Listas */
-ul {
-  list-style: disc inside;
-  margin: 1em 0;
-  padding-inline-start: 1.5em;
-}
-
-li {
-  margin-bottom: 0.5em;
-}
-
-/* Forçar bloco e largura completa nos contêineres custom */
-.base-task-list,
-.base-task-list ul {
-  display: block;
-  width: 100%;
-}
-
-/* Itens de tarefa alinhados */
-.base-task-list li {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-/* Inputs */
-input,
-select,
-textarea {
-  padding: 8px;
-  border: 1px solid var(--neutral-border);
-  border-radius: 4px;
-  font-size: 1rem;
-  font-family: inherit;
-  width: 100%;
-  background-color: var(--input-bg);
-  color: var(--text-color);
-  transition: background-color 0.3s, color 0.3s;
-}
-
-/* Checkbox personalizado com tema */
-input[type="checkbox"] {
-  accent-color: var(--primary-color);
-  cursor: pointer;
-}
-
-/* Botões padrão */
-button {
-  padding: 10px 20px;
-  font-size: 1rem;
-  background-color: var(--input-bg);
-  color: var(--text-color);
-  border: 1px solid var(--neutral-border);
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
-  outline: none;
-}
-
-button:hover {
-  background-color: #e0e0e0;
-  transform: scale(1.05);
-}
-
-button:active {
-  background-color: #ccc;
-  transform: scale(0.98);
-}
-
-button:focus {
-  outline: 2px solid #005fcc;
-  outline-offset: 2px;
-}
-
-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* Layout */
-.page-wrapper,
-.settings-page {
-  background-color: var(--neutral-bg);
-  max-width: 600px;
+.page-wrapper {
+  max-width: var(--page-max-width);
   margin: 2rem auto;
-  padding: 20px;
+  padding: var(--page-padding);
+  background: var(--neutral-bg);
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow-light);
 }
 
-/* Abas */
-.tabs {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.tab-button {
-  padding: 10px 20px;
-  background-color: #f0f0f0;
-  border: 1px solid var(--neutral-border);
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.tab-button:hover {
-  background-color: #e0e0e0;
-}
-
-.tab-button.active {
-  background-color: var(--primary-color);
-  color: #fff;
-  font-weight: bold;
-}
-
-/* Configurações */
-.settings-content {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.setting-item {
-  display: flex;
-  flex-direction: row;
-  gap: 6px;
+h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
 }

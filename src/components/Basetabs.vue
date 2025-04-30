@@ -1,6 +1,6 @@
 <template>
-  <div class="tabs">
-    <button v-for="tab in tabs" :key="tab.key" class="tab-button" :class="{ active: activeKey === tab.key }"
+  <div class="tabs-container">
+    <button v-for="tab in tabs" :key="tab.key" :class="['tab-button', { active: activeKey === tab.key }]"
       @click="$emit('update:activeKey', tab.key)" :aria-label="tab.label">
       <component :is="tab.icon" />
     </button>
@@ -9,7 +9,6 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue';
-
 const props = defineProps<{
   tabs: { key: string; icon: any; label: string }[];
   activeKey: string;
@@ -18,22 +17,20 @@ const emit = defineEmits<['update:activeKey', string]>();
 </script>
 
 <style scoped>
-.tabs {
+.tabs-container {
   display: flex;
-  gap: 1rem;
+  gap: var(--tab-gap);
+  margin-bottom: var(--section-gap);
 }
 
 .tab-button {
   background: none;
   border: none;
-  padding: 0.5rem;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
+  padding: var(--control-padding);
+  font-size: 1.25rem;
   color: var(--text-color);
-  transition: color 0.2s, background 0.2s;
+  transition: color 0.2s;
 }
 
 .tab-button.active {

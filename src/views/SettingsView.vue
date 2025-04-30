@@ -46,7 +46,6 @@ import BaseUserSettings from '@/components/BaseUserSettings.vue';
 import BaseActionButtons from '@/components/BaseActionsButtons.vue';
 
 const { t } = useI18n();
-const router = useRouter();
 const activeTab = ref<'notifications' | 'user'>('notifications');
 
 // Estados das configurações
