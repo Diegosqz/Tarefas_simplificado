@@ -2,16 +2,32 @@
   <!-- Resumo com contagem por prioridade -->
   <div class="task-summary">
     Tarefas:
-    <span class="low">Baixa: {{ lowCount }}</span>,
-    <span class="medium">Média: {{ mediumCount }}</span>,
-    <span class="high">Alta: {{ highCount }}</span>
+    <button class="filter-btn low" :class="{ active: filter === 'low' }" @click="filter = 'low'">
+      Baixa: {{ lowCount }}
+    </button>,
+    <button class="filter-btn medium" :class="{ active: filter === 'medium' }" @click="filter = 'medium'">
+      Média: {{ mediumCount }}
+    </button>,
+    <button class="filter-btn high" :class="{ active: filter === 'high' }" @click="filter = 'high'">
+      Alta: {{ highCount }}
+    </button>,
+    <button class="filter-btn all" :class="{ active: filter === 'all' }" @click="filter = 'all'">
+      Todas
+    </button>,
+    <button class="filter-btn completed" :class="{ active: filter === 'completed' }" @click="filter = 'completed'">
+      Completas: {{ completedCount }}
+    </button>,
+    <button class="filter-btn deleted" :class="{ active: filter === 'deleted' }" @click="filter = 'deleted'">
+      Excluídas: {{ deletedCount }}
+    </button>
   </div>
 
-  <ul class="task-list">
-    <li v-for="task in sortedTasks" :key="task.id" :class="['task-item', { completed: task.completed }]">
+  <transition-group name="fade" tag="ul" class="task-list">
+    <li v-for="task in sortedTasks" :key="task.id"
+      :class="['task-item', { completed: task.completed, deleted: task.deleted }]">
       <!-- 1) Texto e checkbox -->
       <div class="task-info">
-        <input type="checkbox" v-model="task.completed" />
+        <input type="checkbox" v-model="task.completed" @change="updateTaskState(task)" />
         <span class="task-text">{{ task.text }}</span>
       </div>
 
@@ -19,40 +35,40 @@
       <div class="task-priority">
         <label v-for="p in priorities" :key="p.value" class="priority-radio" :data-priority="p.value">
           <input type="radio" :name="'priority-' + task.id" :value="p.value" :checked="task.priority === p.value"
-            @change="() => setPriority(task.id, p.value)" />
+            @change="() => setPriority(task.id, p.value)" :disabled="filter === 'completed' || filter === 'deleted'" />
           <span class="custom-radio"></span>
           {{ p.label }}
         </label>
       </div>
 
-      <!-- 3) Ações -->
-      <div class="task-actions">
+      <!-- 3) Ações (exibido apenas quando a tarefa não está concluída ou excluída) -->
+      <div class="task-actions" v-if="!(filter === 'completed' || filter === 'deleted')">
         <baseEditTask @edit="() => emit('edit', task.id)" />
-        <baseDeleteTask @delete="() => emit('delete', task.id)" />
+        <baseDeleteTask @delete="() => deleteTask(task.id)" />
       </div>
     </li>
-  </ul>
+  </transition-group>
 </template>
 
 <script setup lang="ts">
 import BaseEditTask from './BaseEditTask.vue';
 import BaseDeleteTask from './BaseDeleteTask.vue';
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const { locale, t } = useI18n();
 
 const priorities = [
-  { label: 'Baixa', value: 'low' },
-  { label: 'Média', value: 'medium' },
-  { label: 'Alta', value: 'high' }
+  { label: '', value: 'low' },
+  { label: '', value: 'medium' },
+  { label: '', value: 'high' }
 ];
 
 interface Task {
   id: number;
   text: string;
   completed: boolean;
-  value: string;
+  deleted: boolean;  // Campo adicionado para representar tarefas excluídas
   priority: 'low' | 'medium' | 'high';
 }
 
@@ -63,6 +79,9 @@ const emit = defineEmits<{
   (e: 'delete', id: number): void;
 }>();
 
+// Filtro ativo
+const filter = ref<'low' | 'medium' | 'high' | 'all' | 'completed' | 'deleted'>('all');
+
 // Atualiza prioridade
 function setPriority(id: number, priority: 'low' | 'medium' | 'high') {
   const task = tasks.find(t => t.id === id);
@@ -71,16 +90,48 @@ function setPriority(id: number, priority: 'low' | 'medium' | 'high') {
   }
 }
 
-// Ordenação de tarefas por prioridade
+// Atualiza o estado da tarefa (completa ou excluída)
+function updateTaskState(task: Task) {
+  if (task.completed) {
+    task.deleted = false;  // Se completada, a tarefa não pode ser excluída
+  }
+}
+
+// Excluir tarefa (muda para excluída)
+function deleteTask(id: number) {
+  const task = tasks.find(t => t.id === id);
+  if (task) {
+    task.deleted = true;  // Marca como excluída
+    task.completed = false;  // A tarefa não pode ser marcada como completada se excluída
+  }
+}
+
+// Ordenação e filtragem de tarefas
 const priorityOrder = { high: 0, medium: 1, low: 2 };
+
+const filteredTasks = computed(() => {
+  if (filter.value === 'completed') {
+    return tasks.filter(t => t.completed);
+  }
+  if (filter.value === 'deleted') {
+    return tasks.filter(t => t.deleted);  // Filtra as tarefas excluídas
+  }
+  if (filter.value === 'all') {
+    return tasks.filter(t => !t.completed && !t.deleted);  // Filtra tarefas não completadas nem excluídas
+  }
+  return tasks.filter(t => t.priority === filter.value && !t.completed && !t.deleted);  // Filtro por prioridade e excluindo completadas/excluídas
+});
+
 const sortedTasks = computed(() =>
-  [...tasks].sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority])
+  [...filteredTasks.value].sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority])
 );
 
-// Contadores por prioridade
-const lowCount = computed(() => tasks.filter(t => t.priority === 'low').length);
-const mediumCount = computed(() => tasks.filter(t => t.priority === 'medium').length);
-const highCount = computed(() => tasks.filter(t => t.priority === 'high').length);
+// Contadores por prioridade e status
+const lowCount = computed(() => tasks.filter(t => t.priority === 'low' && !t.completed && !t.deleted).length);
+const mediumCount = computed(() => tasks.filter(t => t.priority === 'medium' && !t.completed && !t.deleted).length);
+const highCount = computed(() => tasks.filter(t => t.priority === 'high' && !t.completed && !t.deleted).length);
+const completedCount = computed(() => tasks.filter(t => t.completed).length); // Contador de tarefas completas
+const deletedCount = computed(() => tasks.filter(t => t.deleted).length); // Contador de tarefas excluídas
 </script>
 
 <style scoped>
@@ -89,16 +140,43 @@ const highCount = computed(() => tasks.filter(t => t.priority === 'high').length
   margin-bottom: 1rem;
 }
 
-.low {
+.filter-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0 0.25rem;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.filter-btn.low {
   color: #28a745;
 }
 
-.medium {
+.filter-btn.medium {
   color: #ffc107;
 }
 
-.high {
+.filter-btn.high {
   color: #dc3545;
+}
+
+.filter-btn.all {
+  color: #007bff;
+}
+
+.filter-btn.completed {
+  color: #6c757d;
+}
+
+.filter-btn.deleted {
+  color: #dc3545;
+  /* Você pode escolher uma cor diferente para as excluídas */
+}
+
+.filter-btn.active {
+  font-weight: bold;
 }
 
 .task-list {
@@ -137,7 +215,7 @@ const highCount = computed(() => tasks.filter(t => t.priority === 'high').length
   user-select: none;
 }
 
-.priority-radio input[type="radio"] {
+.priority-radio input[type='radio'] {
   position: absolute;
   opacity: 0;
   cursor: pointer;
@@ -156,22 +234,22 @@ const highCount = computed(() => tasks.filter(t => t.priority === 'high').length
   transition: border-color 0.2s, background-color 0.2s;
 }
 
-.priority-radio input[type="radio"]:checked+.custom-radio {
+.priority-radio input[type='radio']:checked+.custom-radio {
   border-color: #007bff;
   background-color: #007bff;
 }
 
-.priority-radio[data-priority="low"] input[type="radio"]:checked+.custom-radio {
+.priority-radio[data-priority='low'] input[type='radio']:checked+.custom-radio {
   background-color: #28a745;
   border-color: #28a745;
 }
 
-.priority-radio[data-priority="medium"] input[type="radio"]:checked+.custom-radio {
+.priority-radio[data-priority='medium'] input[type='radio']:checked+.custom-radio {
   background-color: #ffc107;
   border-color: #ffc107;
 }
 
-.priority-radio[data-priority="high"] input[type="radio"]:checked+.custom-radio {
+.priority-radio[data-priority='high'] input[type='radio']:checked+.custom-radio {
   background-color: #dc3545;
   border-color: #dc3545;
 }
@@ -185,5 +263,23 @@ const highCount = computed(() => tasks.filter(t => t.priority === 'high').length
 .completed .task-text {
   text-decoration: line-through;
   color: #999;
+}
+
+.deleted .task-text {
+  color: #ccc;
+  text-decoration: line-through;
+  font-style: italic;
+}
+
+/* Transição suave ao desaparecer/aparecer */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
 }
 </style>

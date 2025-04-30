@@ -2,7 +2,6 @@
   <div class="page-wrapper">
     <!-- Contêiner para idioma e tema -->
     <div class="top-controls">
-      <!-- Seletor de idioma no canto superior direito -->
       <BaseTooltipButton label="Trocar idioma" @click="toggleLanguageMenu">
         <span class="current-language">{{ getFlag(currentLanguage) }}
           <span class="arrow" :class="{ open: languageMenuVisible }">▾</span>
@@ -13,93 +12,80 @@
           {{ getFlag(lang) }}
         </span>
       </div>
-      <!-- Botão de alternância de tema com tooltip -->
       <BaseTooltipButton label="Alternar Tema" @click="toggleTheme">
         <div class="theme-switcher">
           <span>{{ currentTheme === 'dark' ? '🌙' : '☀️' }}</span>
         </div>
       </BaseTooltipButton>
     </div>
+
     <div class="task-app">
       <h1>{{ $t('pt-BR.List_of_Tasks') }}</h1>
-      <!-- Linha com botão de adicionar e configurações lado a lado -->
+
       <div class="top-bar">
         <baseAddTask @add="addTask" />
         <BaseTooltipButton label="Configurações" @click="openSettings">
           ⚙️
         </BaseTooltipButton>
       </div>
-      <hr>
-      <div>
-        <p>teste</p>
-        <hr>
-      </div>
-      <!-- Lista de tarefas -->
-      <baseTaskList :tasks="tasks" @edit="editTask" @delete="deleteTask" />
+
+      <baseTaskList :tasks="filteredTasks" @edit="editTask" @delete="deleteTask" />
     </div>
   </div>
-
 </template>
-
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import baseAddTask from '@/components/BaseAddTask.vue';
-import baseTaskList from '@/components/BaseTaskList.vue';
+import BaseAddTask from '@/components/BaseAddTask.vue';
+import BaseTaskList from '@/components/BaseTaskList.vue';
 import BaseTooltipButton from '@/components/BaseTooltipButton.vue';
 
-
-const tasks = ref<{ id: number; text: string; completed: boolean }[]>([]);
+const tasks = ref<{ id: number; text: string; completed: boolean; priority: 'low' | 'medium' | 'high' }[]>([]);
 const nextId = ref(1);
 const router = useRouter();
 const currentLanguage = ref('pt');
 const languageMenuVisible = ref(false);
 const availableLanguages = ['en', 'pt', 'es'];
-const currentTheme = ref(localStorage.getItem('theme') || 'light'); // Recupera o tema salvo ou usa 'light' como padrão
-// Função para alternar entre os temas
+const currentTheme = ref(localStorage.getItem('theme') || 'light');
 
+// Alternar tema claro/escuro
 function toggleTheme() {
   currentTheme.value = currentTheme.value === 'light' ? 'dark' : 'light';
-  document.body.classList.toggle('dark-theme', currentTheme.value === 'dark'); // Adiciona a classe para o body
-  localStorage.setItem('theme', currentTheme.value); // Salva a escolha no localStorage
+  document.body.classList.toggle('dark-theme', currentTheme.value === 'dark');
+  localStorage.setItem('theme', currentTheme.value);
   document.body.classList.remove('light', 'dark');
   document.body.classList.add(currentTheme.value);
 }
 
-
-// Função para mudar o idioma
-
+// Menu de idiomas
 function toggleLanguageMenu() {
   languageMenuVisible.value = !languageMenuVisible.value;
 }
-const otherLanguages = computed(() =>
-  availableLanguages.filter(lang => lang !== currentLanguage.value)
-);
+const otherLanguages = computed(() => availableLanguages.filter(lang => lang !== currentLanguage.value));
 function changeLanguage(lang: string) {
   currentLanguage.value = lang;
   languageMenuVisible.value = false;
   console.log(`Idioma trocado para: ${lang}`);
-
 }
 function getFlag(lang: string): string {
   switch (lang) {
-    case 'pt':
-      return '🇧🇷';
-    case 'en':
-      return '🇺🇸';
-    case 'es':
-      return '🇪🇸';
-    default:
-      return '🌐';
+    case 'pt': return '🇧🇷';
+    case 'en': return '🇺🇸';
+    case 'es': return '🇪🇸';
+    default: return '🌐';
   }
 }
+
+// Gerenciamento de tarefas
 function addTask(text: string) {
-  tasks.value.push({ id: nextId.value++, text, completed: false });
+  tasks.value.push({ id: nextId.value++, text, completed: false, priority: 'low' });
 }
+
 function deleteTask(id: number) {
   tasks.value = tasks.value.filter(task => task.id !== id);
 }
+
 function editTask(id: number) {
   const task = tasks.value.find(task => task.id === id);
   if (task) {
@@ -109,15 +95,19 @@ function editTask(id: number) {
     }
   }
 }
+
 function openSettings() {
   router.push('/configuracoes');
 }
+
+// Mostrar todas as tarefas (sem filtro)
+const filteredTasks = computed(() => tasks.value);
+
 onMounted(() => {
   if (currentTheme.value === 'dark') {
     document.body.classList.add('dark-theme');
   }
 });
-
 </script>
 
 <style scoped>
@@ -141,28 +131,24 @@ onMounted(() => {
   height: 100%;
 }
 
-/* Contêiner para idioma e tema */
+/* Controles de idioma e tema */
 .top-controls {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  /* Diminuir o gap para aproximar os ícones de idioma e tema */
   gap: 6px;
-  /* Ajuste para reduzir a distância entre eles */
   position: absolute;
   top: 20px;
   right: 19px;
   z-index: 100;
 }
 
-/* Estilos para o botão de tema */
 .theme-switcher {
   font-size: 18px;
   cursor: pointer;
   user-select: none;
 }
 
-/* Estilos do tooltip */
 .language-switcher {
   cursor: pointer;
   user-select: none;
