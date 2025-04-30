@@ -5,7 +5,7 @@
       <label for="name" class="input-label">
         <UserIcon class="icon" aria-hidden="true" />
       </label>
-      <input id="name" v-model="localUserName" :placeholder="t('pt-BR.settings.insertorname')" required />
+      <input id="name" v-model="localUserName" :placeholder="t('pt-BR.Settings.insertorname')" required />
 
       <label for="dn" class="input-label">
         <CalendarIcon class="icon" aria-hidden="true" />

@@ -6,13 +6,13 @@
 
     <div class="setting-item">
 
-      <label for="Notificações">{{ $t('pt-BR.settings.notifications') }}:</label>
+      <label for="Notificações">{{ $t('pt-BR.Settings.notifications') }}:</label>
 
       <div class="status-toggle">
 
         <span>
 
-          {{ notificationsEnabled ? $t('pt-BR.settings.enabled') : $t('pt-BR.settings.disabled') }}
+          {{ notificationsEnabled ? $t('pt-BR.Settings.enabled') : $t('pt-BR.Settings.disabled') }}
 
         </span>
         <input id="notifications" type="checkbox" :checked="notificationsEnabled" @change="updateNotifications" />
@@ -23,9 +23,9 @@
     <!-- Email principal -->
 
     <div class="setting-item">
-      <label for="notification-email">{{ $t('pt-BR.settings.email') }}:</label>
+      <label for="notification-email">{{ $t('pt-BR.Settings.email') }}:</label>
       <input id="notification-email" type="email" :value="notificationEmail" @input="updateEmail"
-        :placeholder="$t('pt-BR.settings.email')" />
+        :placeholder="$t('pt-BR.Settings.email')" />
     </div>
 
 
@@ -33,14 +33,14 @@
 
     <div v-for="(email, index) in additionalEmails" :key="`extra-email-${index}`" class="setting-item">
       <label class="placeholder-label"></label>
-      <input type="email" v-model="additionalEmails[index]" :placeholder="$t('pt-BR.settings.addEmail')" />
+      <input type="email" v-model="additionalEmails[index]" :placeholder="$t('pt-BR.Settings.addEmail')" />
       <button type="button" @click="removeEmail(index)">🗑️</button>
     </div>
 
     <div class="setting-item">
       <span class="placeholder-label"></span>
       <button class="add-button" type="button" @click="addEmail">
-        {{ $t('pt-BR.settings.addEmail') }}
+        {{ $t('pt-BR.Settings.addEmail') }}
       </button>
     </div>
 
@@ -48,9 +48,9 @@
     <!-- Telefone principal -->
 
     <div class="setting-item">
-      <label for="notification-phone">{{ $t('pt-BR.settings.phone') }}:</label>
+      <label for="notification-phone">{{ $t('pt-BR.Settings.phone') }}:</label>
       <input id="notification-phone" type="tel" :value="notificationPhone" @input="updatePhone"
-        :placeholder="$t('pt-BR.settings.phone')" />
+        :placeholder="$t('pt-BR.Settings.phone')" />
     </div>
 
 
@@ -58,13 +58,13 @@
 
     <div v-for="(phone, index) in additionalPhones" :key="`extra-phone-${index}`" class="setting-item">
       <label class="placeholder-label"></label>
-      <input type="tel" v-model="additionalPhones[index]" :placeholder="$t('pt-BR.settings.addPhone')" />
+      <input type="tel" v-model="additionalPhones[index]" :placeholder="$t('pt-BR.Settings.addPhone')" />
       <button type="button" @click="removePhone(index)">🗑️</button>
     </div>
     <div class="setting-item">
       <span class="placeholder-label"></span>
       <button class="add-button" type="button" @click="addPhone">
-        {{ $t('pt-BR.settings.addPhone') }}
+        {{ $t('pt-BR.Settings.addPhone') }}
       </button>
     </div>
   </div>
@@ -110,7 +110,7 @@ function addEmail() {
   additionalEmails.value.push('');
 }
 function removeEmail(index: number) {
-  const confirmed = window.confirm(t('pt-BR.settings.removeConfirmationEmail'));
+  const confirmed = window.confirm(t('pt-BR.Settings.removeConfirmationEmail'));
   if (confirmed) {
     additionalEmails.value.splice(index, 1);
   }
@@ -120,7 +120,7 @@ function addPhone() {
   additionalPhones.value.push('');
 }
 function removePhone(index: number) {
-  const confirmed = window.confirm(t('pt-BR.settings.removeConfirmationPhone'));
+  const confirmed = window.confirm(t('pt-BR.Settings.removeConfirmationPhone'));
   if (confirmed) {
     additionalPhones.value.splice(index, 1);
   }
