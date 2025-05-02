@@ -17,14 +17,14 @@
     <div class="setting-item">
       <label for="notification-email">{{ $t('Settings.email') }}:</label>
       <input id="notification-email" type="email" :value="notificationEmail" @input="updateEmail"
-        :placeholder="$t('pt-BR.Settings.email')" />
+        :placeholder="$t('Settings.email')" />
     </div>
 
     <!-- Emails adicionais -->
 
     <div v-for="(email, index) in additionalEmails" :key="`extra-email-${index}`" class="setting-item">
       <label class="placeholder-label"></label>
-      <input type="email" v-model="additionalEmails[index]" :placeholder="t('Settings.addEmail')" />
+      <input type="email" v-model="additionalEmails[index]" :placeholder="$t('Settings.addEmail')" />
       <button type="button" @click="removeEmail(index)">🗑️</button>
     </div>
 
@@ -38,22 +38,22 @@
     <!-- Telefone principal -->
 
     <div class="setting-item">
-      <label for="notification-phone">{{ t('Settings.phone') }}:</label>
+      <label for="notification-phone">{{ $t('Settings.phone') }}:</label>
       <input id="notification-phone" type="tel" :value="notificationPhone" @input="updatePhone"
-        :placeholder="t('pt-BR.Settings.phone')" />
+        :placeholder="$t('Settings.phone')" />
     </div>
 
     <!-- Telefones adicionais -->
 
     <div v-for="(phone, index) in additionalPhones" :key="`extra-phone-${index}`" class="setting-item">
       <label class="placeholder-label"></label>
-      <input type="tel" v-model="additionalPhones[index]" :placeholder="t('Settings.addPhone')" />
+      <input type="tel" v-model="additionalPhones[index]" :placeholder="$t('Settings.addPhone')" />
       <button type="button" @click="removePhone(index)">🗑️</button>
     </div>
     <div class="setting-item">
       <span class="placeholder-label"></span>
       <button class="add-button" type="button" @click="addPhone">
-        {{ t('Settings.addPhone') }}
+        {{ $t('Settings.addPhone') }}
       </button>
     </div>
 
@@ -62,46 +62,49 @@
 
 
 <script setup lang="ts">
-
-import { defineProps, defineEmits, ref, computed } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
+import { useThemeStore } from '@/stores/theme';
 import { useI18n } from 'vue-i18n';
-const currentLanguage = ref('pt');
-const languageMenuVisible = ref(false);
-const availableLanguages = ['en', 'pt', 'es'];
-const currentTheme = ref(localStorage.getItem('theme') || 'light');
-
-// Alternar tema claro/escuro
+const { t, locale } = useI18n();
+// Tema global com Pinia
+const themeStore = useThemeStore();
+const currentTheme = computed(() => themeStore.theme);
 function toggleTheme() {
-  currentTheme.value = currentTheme.value === 'light' ? 'dark' : 'light';
-  document.body.classList.toggle('dark-theme', currentTheme.value === 'dark');
-  localStorage.setItem('theme', currentTheme.value);
+  themeStore.toggleTheme();
+}
+// Aplicar classe do tema ao carregar e quando mudar
+onMounted(() => {
   document.body.classList.remove('light', 'dark');
   document.body.classList.add(currentTheme.value);
-}
+});
+watch(currentTheme, (theme) => {
+  document.body.classList.remove('light', 'dark');
+  document.body.classList.add(theme);
+});
+// Idioma local
+const currentLanguage = ref('pt-BR');
+const languageMenuVisible = ref(false);
+const availableLanguages = ['pt-BR', 'en-US', 'es'];
+const otherLanguages = computed(() => availableLanguages.filter(lang => lang !== currentLanguage.value));
 
-// Menu de idiomas
 function toggleLanguageMenu() {
   languageMenuVisible.value = !languageMenuVisible.value;
 }
-const otherLanguages = computed(() => availableLanguages.filter(lang => lang !== currentLanguage.value));
 function changeLanguage(lang: string) {
-  watch(currentLanguage, (lang) => {
-    locale.value = lang;
-  });
+  locale.value = lang;
+  currentLanguage.value = lang;
   languageMenuVisible.value = false;
-  console.log(`Idioma trocado para: ${lang}`);
 }
+
 function getFlag(lang: string): string {
   switch (lang) {
-    case 'pt': return '🇧🇷';
-    case 'en': return '🇺🇸';
+    case 'pt-BR': return '🇧🇷';
+    case 'en-US': return '🇺🇸';
     case 'es': return '🇪🇸';
     default: return '🌐';
   }
 }
 
-
-const { locale, t } = useI18n();
 const props = defineProps({
   notificationsEnabled: Boolean,
   notificationEmail: String,
@@ -133,7 +136,7 @@ function addEmail() {
   additionalEmails.value.push('');
 }
 function removeEmail(index: number) {
-  const confirmed = window.confirm(t('pt-BR.Settings.removeConfirmationEmail'));
+  const confirmed = window.confirm($t('Settings.removeConfirmationEmail'));
   if (confirmed) {
     additionalEmails.value.splice(index, 1);
   }
@@ -142,7 +145,7 @@ function addPhone() {
   additionalPhones.value.push('');
 }
 function removePhone(index: number) {
-  const confirmed = window.confirm(t('pt-BR.Settings.removeConfirmationPhone'));
+  const confirmed = window.confirm($t('Settings.removeConfirmationPhone'));
   if (confirmed) {
     additionalPhones.value.splice(index, 1);
   }

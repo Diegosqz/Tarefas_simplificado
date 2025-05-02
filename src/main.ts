@@ -12,7 +12,6 @@ import ptBR from './locales/pt-BR.json';
 import enUS from './locales/en-US.json';
 import es from './locales/es.json';
 import { createI18n } from 'vue-i18n'; // Importe createI18n aqui
-
 const app = createApp(App)
 const isDark = useDark({
   selector: 'html', // onde a classe 'dark' será aplicada
@@ -21,6 +20,7 @@ const isDark = useDark({
 const toggleDark = useToggle(isDark)
 const i18n = createI18n({
   legacy: false,
+  globalInjection: true,
   locale: 'pt-BR',
   fallbackLocale: 'en-US',
   availableLocales: ['pt-BR','en-US', 'es'],

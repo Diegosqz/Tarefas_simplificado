@@ -1,15 +1,15 @@
 <template>
   <div class="setting-item">
-    <label for="language">{{ t('LanguageSettings.Language') }}:</label>
+    <label for="language">{{ $t('LanguageSettings.Language') }}:</label>
     <select id="language" :value="selectedLanguage" @change="onChange">
       <option value="pt">
-        <FlagIcon iso="br" /> {{ t('LanguageSettings.Portuguese') }}
+        <FlagIcon iso="br" /> {{ $t('LanguageSettings.Portuguese') }}
       </option>
       <option value="en">
-        <FlagIcon iso="us" /> {{ t('LanguageSettings.English') }}
+        <FlagIcon iso="us" /> {{ $t('LanguageSettings.English') }}
       </option>
       <option value="es">
-        <FlagIcon iso="es" /> {{ t('LanguageSettings.Espanhol') }}
+        <FlagIcon iso="es" /> {{ $t('LanguageSettings.Espanhol') }}
       </option>
     </select>
   </div>

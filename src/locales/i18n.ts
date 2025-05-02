@@ -8,9 +8,9 @@ const i18n = createI18n({
   locale: 'pt-BR',
   fallbackLocale: 'en-US',
   messages: {
-    'pt-BR': pt['pt-BR'],
-    'en-US': en['en-US'],
-    'es': es['es']
+    'pt-BR': pt,
+    'en-US': en,
+    'es': es
   }
 });
 

@@ -1,7 +1,15 @@
 {
+    "a": "asdasdas",
     "Hello, World": "Hello, World!",
     "Olá, Mundo!": "Hello, World!",
     "List_of_Tasks":"List of Tasks",
+    "Tasks":"Tasks",
+    "Low":"Low",
+    "Medium":"Medium",
+    "High":"High",
+    "All":"All",
+    "Completed":"Completed",
+    "Excluded":"Excluded",
     "tabs": {
       "notifications": "Notifications",
       "user": "User"

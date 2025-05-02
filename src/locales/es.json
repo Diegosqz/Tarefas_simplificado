@@ -1,7 +1,16 @@
 {
+    "a": "asdasdas",
     "Hello, World": "¡Hola, Mundo!",
     "Olá, Mundo!": "¡Hola, Mundo!",
-    "List_of_Tasks":"Listas de pendientes",
+    "List_of_Tasks":"Listas de Tareas",
+    "Tasks":"Tareas",
+    "Low":"Bajo",
+    "Medium": "Media",
+    "High": "Alta",  
+    "All": "Todas",
+    "Completed": "Completadas",
+    "Excluded": "Excluidas",
+    "Save Settings":"Guardar configuración",
     "tabs": {
       "notifications": "Notificaciones",
       "user": "Usuario"

@@ -2,7 +2,7 @@
   <div class="settings-page">
     <div class="settings-header">
       <div class="header-title-with-controls">
-        <h1>{{ t('Settings.title') }}</h1>
+        <h1>{{ $t('Settings.title') }}</h1>
         <div class="top-controls-inline">
           <!-- Idioma -->
           <div class="language-wrapper">
@@ -65,6 +65,7 @@
 import { ref, computed, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { useThemeStore } from '@/stores/theme';
 import {
   BellIcon,
   UserIcon,
@@ -77,11 +78,10 @@ import BaseNotificationSettings from '@/components/BaseNotificationSettings.vue'
 import BaseUserSettings from '@/components/BaseUserSettings.vue';
 import BaseActionButtons from '@/components/BaseActionsButtons.vue';
 import BaseTooltipButton from '@/components/BaseTooltipButton.vue';
-
-import { useThemeStore } from '@/stores/theme';
+import BaseFooter from '@/components/BaseFooter.vue';
 
 const router = useRouter();
-const { t, locale } = useI18n();
+const { locale } = useI18n();
 
 // Tema global com Pinia
 const themeStore = useThemeStore();
@@ -110,8 +110,8 @@ function toggleLanguageMenu() {
   languageMenuVisible.value = !languageMenuVisible.value;
 }
 function changeLanguage(lang: string) {
-  currentLanguage.value = lang;
   locale.value = lang;
+  currentLanguage.value = lang;
   languageMenuVisible.value = false;
 }
 function getFlag(lang: string): string {

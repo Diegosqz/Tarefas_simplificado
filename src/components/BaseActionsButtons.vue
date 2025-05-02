@@ -1,16 +1,12 @@
 <template>
   <div class="action-buttons">
-    <button class="save-button" @click="onSave" :disabled="!isFormValid">Salvar Configurações</button>
-    <button class="cancel-button" @click="onCancel">Cancelar</button>
+    <button class="save-button" @click="onSave" :disabled="!isFormValid">{{ $t('Save Settings') }}</button>
+    <button class="cancel-button" @click="onCancel">{{ $t('user.cancel') }}</button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
 import { useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n';
-
-const { locale, t } = useI18n();
 // Props do componente
 const { isFormValid } = defineProps<{ isFormValid: boolean }>();
 

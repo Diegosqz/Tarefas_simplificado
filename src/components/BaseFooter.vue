@@ -1,6 +1,6 @@
 <template>
   <footer class="footer">
-    <p>{{ $t('pt-BR.Footer.developedBy') }}</p>
+    <p>{{ $t('Footer.developedBy') }}</p>
     <div class="social-icons">
       <!-- GitHub ou portfólio fictício como exemplo -->
       <a href="https://github.com/_diegosqz" target="_blank" aria-label="GitHub" rel="noopener noreferrer"

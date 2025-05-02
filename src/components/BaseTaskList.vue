@@ -1,17 +1,22 @@
 <template>
   <!-- Resumo com contagem por prioridade -->
   <div class="task-summary">
-    Tarefas:
-    <button class="filter-btn low" :class="{ active: filter === 'low' }" @click="filter = 'low'">Baixa: {{ lowCount
-      }}</button>,
-    <button class="filter-btn medium" :class="{ active: filter === 'medium' }" @click="filter = 'medium'">Média: {{
-      mediumCount }}</button>,
-    <button class="filter-btn high" :class="{ active: filter === 'high' }" @click="filter = 'high'">Alta: {{ highCount
-      }}</button>,
-    <button class="filter-btn all" :class="{ active: filter === 'all' }" @click="filter = 'all'">Todas</button>,
-    <button class="filter-btn completed" :class="{ active: filter === 'completed' }"
-      @click="filter = 'completed'">Completas: {{ completedCount }}</button>,
-    <button class="filter-btn deleted" :class="{ active: filter === 'deleted' }" @click="filter = 'deleted'">Excluídas:
+    {{ $t('Tasks') }}:
+    <button class="filter-btn low" :class="{ active: filter === 'low' }" @click="filter = 'low'">{{ $t('Low') }}: {{
+      lowCount
+    }}</button>,
+    <button class="filter-btn medium" :class="{ active: filter === 'medium' }" @click="filter = 'medium'">{{
+      $t('Medium') }}: {{
+        mediumCount }}</button>,
+    <button class="filter-btn high" :class="{ active: filter === 'high' }" @click="filter = 'high'">{{ $t('High') }}: {{
+      highCount
+    }}</button>,
+    <button class="filter-btn all" :class="{ active: filter === 'all' }" @click="filter = 'all'">{{ $t('All')
+    }}</button>,
+    <button class="filter-btn completed" :class="{ active: filter === 'completed' }" @click="filter = 'completed'">{{
+      $t('Completed') }}: {{ completedCount }}</button>,
+    <button class="filter-btn deleted" :class="{ active: filter === 'deleted' }" @click="filter = 'deleted'">{{
+      $t('Exclued') }}:
       {{ deletedCount }}</button>
   </div>
 

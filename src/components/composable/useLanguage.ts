@@ -1,41 +1,40 @@
 // components/composable/useLanguage.ts
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-const availableLanguages = ['en', 'pt', 'es']; // Adicione mais se quiser
-const language = ref(localStorage.getItem('lang') || 'pt');
+
+const availableLanguages = ['pt-BR', 'en-US', 'es'];
+
 export function useLanguage() {
   const { locale } = useI18n();
-  const currentLanguage = ref(locale.value);
 
-  // Atualiza o idioma e persiste no localStorage
+  // Lê idioma salvo no localStorage (fallback: 'pt')
+  const storedLang = localStorage.getItem('lang') || 'pt-BR';
+  locale.value = storedLang;
+
   const changeLanguage = (lang: string) => {
     if (availableLanguages.includes(lang)) {
-      language.value = lang;
       locale.value = lang;
       localStorage.setItem('lang', lang);
     }
   };
 
-
-  // Retorna a bandeira do idioma
   const getFlag = (lang: string) => {
     switch (lang) {
-      case 'pt': return '🇧🇷';
-      case 'en': return '🇺🇸';
+      case 'pt-BR': return '🇧🇷';
+      case 'en-US': return '🇺🇸';
       case 'es': return '🇪🇸';
       default: return '🌐';
     }
   };
 
   const otherLanguages = computed(() =>
-    availableLanguages.filter(l => l !== language.value)
+    availableLanguages.filter(l => l !== locale.value)
   );
 
   return {
-    language,
+    locale,            // usa diretamente o locale de vue-i18n
     otherLanguages,
     changeLanguage,
     getFlag,
   };
 }
-
