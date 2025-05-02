@@ -1,5 +1,4 @@
 {
-  "es": {
     "Hello, World": "¡Hola, Mundo!",
     "Olá, Mundo!": "¡Hola, Mundo!",
     "List_of_Tasks":"Listas de pendientes",
@@ -42,6 +41,8 @@
   "theme":"Tema",
   "light":"Luz",
   "dark":"Oscuridad"
+  },
+  "Footer":{
+    "developedBy": "Desarrollado por Diego Silva"
   }
-}
 }

@@ -20,13 +20,14 @@ const isDark = useDark({
 })
 const toggleDark = useToggle(isDark)
 const i18n = createI18n({
+  legacy: false,
   locale: 'pt-BR',
   fallbackLocale: 'en-US',
   availableLocales: ['pt-BR','en-US', 'es'],
   messages:{
     'pt-BR': ptBR,
     'en-US': enUS,
-    'es': es,
+    'es': es
   },
 });
 

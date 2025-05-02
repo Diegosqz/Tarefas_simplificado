@@ -3,10 +3,10 @@
 
     <!-- Notificações -->
     <div class="setting-item">
-      <label for="Notificações">{{ $t('pt-BR.Settings.notifications') }}:</label>
+      <label for="Notificações">{{ $t('Settings.notifications') }}:</label>
       <div class="status-toggle">
         <span>
-          {{ notificationsEnabled ? $t('pt-BR.Settings.enabled') : $t('pt-BR.Settings.disabled') }}
+          {{ notificationsEnabled ? $t('Settings.enabled') : $t('Settings.disabled') }}
         </span>
         <input id="notifications" type="checkbox" :checked="notificationsEnabled" @change="updateNotifications" />
       </div>
@@ -15,7 +15,7 @@
     <!-- Email principal -->
 
     <div class="setting-item">
-      <label for="notification-email">{{ $t('pt-BR.Settings.email') }}:</label>
+      <label for="notification-email">{{ $t('Settings.email') }}:</label>
       <input id="notification-email" type="email" :value="notificationEmail" @input="updateEmail"
         :placeholder="$t('pt-BR.Settings.email')" />
     </div>
@@ -24,36 +24,36 @@
 
     <div v-for="(email, index) in additionalEmails" :key="`extra-email-${index}`" class="setting-item">
       <label class="placeholder-label"></label>
-      <input type="email" v-model="additionalEmails[index]" :placeholder="$t('pt-BR.Settings.addEmail')" />
+      <input type="email" v-model="additionalEmails[index]" :placeholder="t('Settings.addEmail')" />
       <button type="button" @click="removeEmail(index)">🗑️</button>
     </div>
 
     <div class="setting-item">
       <span class="placeholder-label"></span>
       <button class="add-button" type="button" @click="addEmail">
-        {{ $t('pt-BR.Settings.addEmail') }}
+        {{ $t('Settings.addEmail') }}
       </button>
     </div>
 
     <!-- Telefone principal -->
 
     <div class="setting-item">
-      <label for="notification-phone">{{ $t('pt-BR.Settings.phone') }}:</label>
+      <label for="notification-phone">{{ t('Settings.phone') }}:</label>
       <input id="notification-phone" type="tel" :value="notificationPhone" @input="updatePhone"
-        :placeholder="$t('pt-BR.Settings.phone')" />
+        :placeholder="t('pt-BR.Settings.phone')" />
     </div>
 
     <!-- Telefones adicionais -->
 
     <div v-for="(phone, index) in additionalPhones" :key="`extra-phone-${index}`" class="setting-item">
       <label class="placeholder-label"></label>
-      <input type="tel" v-model="additionalPhones[index]" :placeholder="$t('pt-BR.Settings.addPhone')" />
+      <input type="tel" v-model="additionalPhones[index]" :placeholder="t('Settings.addPhone')" />
       <button type="button" @click="removePhone(index)">🗑️</button>
     </div>
     <div class="setting-item">
       <span class="placeholder-label"></span>
       <button class="add-button" type="button" @click="addPhone">
-        {{ $t('pt-BR.Settings.addPhone') }}
+        {{ t('Settings.addPhone') }}
       </button>
     </div>
 

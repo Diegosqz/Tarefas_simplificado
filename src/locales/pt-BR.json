@@ -1,5 +1,4 @@
 {
-  "pt-BR": {
     "a": "asdasdas",
     "Hello, World": "Olá, Mundo!",
     "Olá, Mundo!": "Olá, Mundo!",
@@ -43,6 +42,9 @@
       "theme":"Tema",
         "light":"Claro",
         "dark":"Escuro"
+    },
+    "Footer":{
+      "developedBy": "Desenvolvido por Diego Silva"
     }
-  }
+
 }

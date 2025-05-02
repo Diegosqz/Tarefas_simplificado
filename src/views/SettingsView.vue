@@ -1,11 +1,10 @@
 <template>
   <div class="settings-page">
     <div class="settings-header">
-      <!-- Título e controles -->
       <div class="header-title-with-controls">
-        <h1>{{ t('pt-BR.Settings.title') }}</h1>
+        <h1>{{ t('Settings.title') }}</h1>
         <div class="top-controls-inline">
-          <!-- Botão e menu de idioma -->
+          <!-- Idioma -->
           <div class="language-wrapper">
             <BaseTooltipButton label="Trocar idioma" @click="toggleLanguageMenu">
               <span class="current-language">
@@ -21,7 +20,7 @@
             </div>
           </div>
 
-          <!-- Botão de tema -->
+          <!-- Tema -->
           <BaseTooltipButton label="Alternar Tema" @click="toggleTheme">
             <div class="theme-switcher">
               <span>{{ currentTheme === 'dark' ? '🌙' : '☀️' }}</span>
@@ -33,11 +32,10 @@
       <!-- Abas -->
       <div class="tabs">
         <button class="tab-button" :class="{ active: activeTab === 'notifications' }"
-          @click="activeTab = 'notifications'" aria-label="Notificações">
+          @click="activeTab = 'notifications'">
           <BellIcon />
         </button>
-        <button class="tab-button" :class="{ active: activeTab === 'user' }" @click="activeTab = 'user'"
-          aria-label="Usuário">
+        <button class="tab-button" :class="{ active: activeTab === 'user' }" @click="activeTab = 'user'">
           <UserIcon />
         </button>
       </div>
@@ -64,10 +62,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-
 import {
   BellIcon,
   UserIcon,
@@ -81,48 +78,51 @@ import BaseUserSettings from '@/components/BaseUserSettings.vue';
 import BaseActionButtons from '@/components/BaseActionsButtons.vue';
 import BaseTooltipButton from '@/components/BaseTooltipButton.vue';
 
+import { useThemeStore } from '@/stores/theme';
+
 const router = useRouter();
 const { t, locale } = useI18n();
 
-// Idioma
-const currentLanguage = ref('pt');
+// Tema global com Pinia
+const themeStore = useThemeStore();
+const currentTheme = computed(() => themeStore.theme);
+function toggleTheme() {
+  themeStore.toggleTheme();
+}
+
+// Aplicar classe do tema ao carregar e quando mudar
+onMounted(() => {
+  document.body.classList.remove('light', 'dark');
+  document.body.classList.add(currentTheme.value);
+});
+watch(currentTheme, (theme) => {
+  document.body.classList.remove('light', 'dark');
+  document.body.classList.add(theme);
+});
+
+// Idioma local
+const currentLanguage = ref('pt-BR');
 const languageMenuVisible = ref(false);
-const availableLanguages = ['en', 'pt', 'es'];
-const otherLanguages = computed(() =>
-  availableLanguages.filter(lang => lang !== currentLanguage.value)
-);
+const availableLanguages = ['pt-BR', 'en-US', 'es'];
+const otherLanguages = computed(() => availableLanguages.filter(lang => lang !== currentLanguage.value));
 
 function toggleLanguageMenu() {
   languageMenuVisible.value = !languageMenuVisible.value;
 }
-
 function changeLanguage(lang: string) {
   currentLanguage.value = lang;
   locale.value = lang;
   languageMenuVisible.value = false;
 }
-
 function getFlag(lang: string): string {
   switch (lang) {
-    case 'pt': return '🇧🇷';
-    case 'en': return '🇺🇸';
+    case 'pt-BR': return '🇧🇷';
+    case 'en-US': return '🇺🇸';
     case 'es': return '🇪🇸';
     default: return '🌐';
   }
 }
-
-// Tema
-const currentTheme = ref(localStorage.getItem('theme') || 'light');
-
-function toggleTheme() {
-  currentTheme.value = currentTheme.value === 'light' ? 'dark' : 'light';
-  document.body.classList.toggle('dark-theme', currentTheme.value === 'dark');
-  localStorage.setItem('theme', currentTheme.value);
-  document.body.classList.remove('light', 'dark');
-  document.body.classList.add(currentTheme.value);
-}
-
-// Tabs e conteúdo
+// Tabs e Formulários
 const activeTab = ref<'notifications' | 'user'>('notifications');
 const notificationsEnabled = ref(true);
 const notificationEmail = ref('');
@@ -130,16 +130,17 @@ const notificationPhone = ref('');
 const userName = ref('');
 const dn = ref('');
 const email = ref('');
+
 const isFormValid = computed(() =>
   !!userName.value && !!dn.value && !!email.value
 );
 
 function saveSettings() {
   alert(
-    `${t('pt-BR.user.save')}:\n` +
-    `${userName.value} - ${t('pt-BR.user.name')}\n` +
-    `${dn.value} - ${t('pt-BR.user.birthdate')}\n` +
-    `${email.value} - ${t('pt-BR.settings.email')}`
+    `${t('.user.save')}:\n` +
+    `${userName.value} - ${t('user.name')}\n` +
+    `${dn.value} - ${t('user.birthdate')}\n` +
+    `${email.value} - ${t('settings.email')}`
   );
   router.push({ name: 'AboutView' });
 }
@@ -249,7 +250,7 @@ function saveSettings() {
   margin-top: 20px;
 }
 
-body.dark-theme {
+body.dark {
   background-color: #121212;
   color: #e0e0e0;
 }

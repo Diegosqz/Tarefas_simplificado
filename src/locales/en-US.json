@@ -1,5 +1,4 @@
 {
-  "en-US": {
     "Hello, World": "Hello, World!",
     "Olá, Mundo!": "Hello, World!",
     "List_of_Tasks":"List of Tasks",
@@ -42,5 +41,7 @@
   "theme":"Theme",
   "light":"light",
   "dark":"dark"
-  }
-}}
+  },
+  "Footer":{
+    "developedBy": "Developed by Diego Silva"}
+}

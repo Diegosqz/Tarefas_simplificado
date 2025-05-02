@@ -18,75 +18,85 @@
         </div>
       </BaseTooltipButton>
     </div>
+
     <div class="task-app">
       <div class="task-content">
-        <h1>{{ $t('pt-BR.List_of_Tasks') }}</h1>
+        <h1>{{ $t('List_of_Tasks') }}</h1>
         <div class="top-bar">
-          <baseAddTask @add="addTask" />
-          <BaseTooltipButton label="Configurações" @click="openSettings">
-            ⚙️
-          </BaseTooltipButton>
+          <BaseAddTask @add="addTask" />
+          <BaseTooltipButton label="Configurações" @click="openSettings">⚙️</BaseTooltipButton>
         </div>
-        <baseTaskList :tasks="filteredTasks" @edit="editTask" @delete="deleteTask" />
+        <BaseTaskList :tasks="filteredTasks" @edit="editTask" @delete="deleteTask" />
       </div>
     </div>
-    <BaseFooter /> <!-- Adicionando o rodapé aqui -->
+
+    <BaseFooter />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import { useThemeStore } from '@/stores/theme';
+import { useI18n } from 'vue-i18n'
 import BaseAddTask from '@/components/BaseAddTask.vue';
 import BaseTaskList from '@/components/BaseTaskList.vue';
 import BaseTooltipButton from '@/components/BaseTooltipButton.vue';
 import BaseFooter from '@/components/BaseFooter.vue';
 
-const tasks = ref<{ id: number; text: string; completed: boolean; priority: 'low' | 'medium' | 'high' }[]>([]);
-const nextId = ref(1);
-const router = useRouter();
-const currentLanguage = ref('pt');
-const languageMenuVisible = ref(false);
-const availableLanguages = ['en', 'pt', 'es'];
-const currentTheme = ref(localStorage.getItem('theme') || 'light');
+const { locale } = useI18n();
 
+// Tema global com Pinia
+const themeStore = useThemeStore();
+const currentTheme = computed(() => themeStore.theme);
 function toggleTheme() {
-  currentTheme.value = currentTheme.value === 'light' ? 'dark' : 'light';
-  document.body.classList.toggle('dark-theme', currentTheme.value === 'dark');
-  localStorage.setItem('theme', currentTheme.value);
+  themeStore.toggleTheme();
+}
+
+// Aplicar classe do tema ao carregar e quando mudar
+onMounted(() => {
   document.body.classList.remove('light', 'dark');
   document.body.classList.add(currentTheme.value);
-}
+});
+watch(currentTheme, (theme) => {
+  document.body.classList.remove('light', 'dark');
+  document.body.classList.add(theme);
+});
+
+// Idioma local
+const currentLanguage = ref('pt-BR');
+const languageMenuVisible = ref(false);
+const availableLanguages = ['pt-BR', 'en-US', 'es'];
+const otherLanguages = computed(() => availableLanguages.filter(lang => lang !== currentLanguage.value));
 
 function toggleLanguageMenu() {
   languageMenuVisible.value = !languageMenuVisible.value;
 }
-
-const otherLanguages = computed(() => availableLanguages.filter(lang => lang !== currentLanguage.value));
-
 function changeLanguage(lang: string) {
+  locale.value = lang;
   currentLanguage.value = lang;
   languageMenuVisible.value = false;
-  console.log(`Idioma trocado para: ${lang}`);
 }
 
 function getFlag(lang: string): string {
   switch (lang) {
-    case 'pt': return '🇧🇷';
-    case 'en': return '🇺🇸';
+    case 'pt-BR': return '🇧🇷';
+    case 'en-US': return '🇺🇸';
     case 'es': return '🇪🇸';
     default: return '🌐';
   }
 }
 
+// Tarefas
+const tasks = ref<{ id: number; text: string; completed: boolean; priority: 'low' | 'medium' | 'high' }[]>([]);
+const nextId = ref(1);
+
 function addTask(text: string) {
   tasks.value.push({ id: nextId.value++, text, completed: false, priority: 'low' });
 }
-
 function deleteTask(id: number) {
   tasks.value = tasks.value.filter(task => task.id !== id);
 }
-
 function editTask(id: number) {
   const task = tasks.value.find(task => task.id === id);
   if (task) {
@@ -96,18 +106,12 @@ function editTask(id: number) {
     }
   }
 }
+const filteredTasks = computed(() => tasks.value);
 
+const router = useRouter();
 function openSettings() {
   router.push('/configuracoes');
 }
-
-const filteredTasks = computed(() => tasks.value);
-
-onMounted(() => {
-  if (currentTheme.value === 'dark') {
-    document.body.classList.add('dark-theme');
-  }
-});
 </script>
 
 <style scoped>
@@ -119,8 +123,14 @@ onMounted(() => {
   box-shadow: var(--box-shadow-light);
 }
 
-.task-app h1 {
+.task-content {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.task-content h1 {
   text-align: center;
+  margin-bottom: 3px;
 }
 
 .top-bar {
@@ -150,11 +160,6 @@ onMounted(() => {
 
 .theme-switcher {
   font-size: 18px;
-  cursor: pointer;
-  user-select: none;
-}
-
-.language-switcher {
   cursor: pointer;
   user-select: none;
 }
@@ -201,27 +206,17 @@ onMounted(() => {
   background-color: #f0f0f0;
 }
 
-body.dark-theme {
+body.dark {
   background-color: #121212;
   color: #e0e0e0;
 }
 
-body.dark-theme .task-app {
+body.dark .task-app {
   background-color: #2c2c2c;
   color: #e0e0e0;
 }
 
 .page-wrapper {
   position: relative;
-}
-
-.task-content {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.task-content h1 {
-  text-align: center;
-  margin-bottom: 3px;
 }
 </style>

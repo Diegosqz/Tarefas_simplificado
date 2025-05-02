@@ -2,14 +2,21 @@
 import { RouterLink, RouterView } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { ref, watch } from 'vue'
+import { useThemeStore } from './stores/theme';
+const themeStore = useThemeStore();
+const currentLanguage = ref(localStorage.getItem('lang') || 'pt');
 
+const { locale } = useI18n();
+
+locale.value = currentLanguage.value;
 </script>
 
 <template>
   <!-- <header></header> -->
+  <div :class="themeStore.theme">
 
-
-  <RouterView />
+    <RouterView />
+  </div>
 </template>
 
 <style scoped>
