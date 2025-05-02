@@ -52,7 +52,6 @@
           @update:notificationEmail="notificationEmail = $event"
           @update:notificationPhone="notificationPhone = $event" />
       </div>
-
       <div v-if="activeTab === 'user'">
         <BaseUserSettings :icon-name="UserIcon" :icon-dn="CalendarIcon" :icon-email="MailIcon" :userName="userName"
           :dn="dn" :email="email" @update:userName="userName = $event" @update:dn="dn = $event"

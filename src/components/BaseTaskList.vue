@@ -2,35 +2,28 @@
   <!-- Resumo com contagem por prioridade -->
   <div class="task-summary">
     Tarefas:
-    <button class="filter-btn low" :class="{ active: filter === 'low' }" @click="filter = 'low'">
-      Baixa: {{ lowCount }}
-    </button>,
-    <button class="filter-btn medium" :class="{ active: filter === 'medium' }" @click="filter = 'medium'">
-      Média: {{ mediumCount }}
-    </button>,
-    <button class="filter-btn high" :class="{ active: filter === 'high' }" @click="filter = 'high'">
-      Alta: {{ highCount }}
-    </button>,
-    <button class="filter-btn all" :class="{ active: filter === 'all' }" @click="filter = 'all'">
-      Todas
-    </button>,
-    <button class="filter-btn completed" :class="{ active: filter === 'completed' }" @click="filter = 'completed'">
-      Completas: {{ completedCount }}
-    </button>,
-    <button class="filter-btn deleted" :class="{ active: filter === 'deleted' }" @click="filter = 'deleted'">
-      Excluídas: {{ deletedCount }}
-    </button>
+    <button class="filter-btn low" :class="{ active: filter === 'low' }" @click="filter = 'low'">Baixa: {{ lowCount
+      }}</button>,
+    <button class="filter-btn medium" :class="{ active: filter === 'medium' }" @click="filter = 'medium'">Média: {{
+      mediumCount }}</button>,
+    <button class="filter-btn high" :class="{ active: filter === 'high' }" @click="filter = 'high'">Alta: {{ highCount
+      }}</button>,
+    <button class="filter-btn all" :class="{ active: filter === 'all' }" @click="filter = 'all'">Todas</button>,
+    <button class="filter-btn completed" :class="{ active: filter === 'completed' }"
+      @click="filter = 'completed'">Completas: {{ completedCount }}</button>,
+    <button class="filter-btn deleted" :class="{ active: filter === 'deleted' }" @click="filter = 'deleted'">Excluídas:
+      {{ deletedCount }}</button>
   </div>
 
   <transition-group name="fade" tag="ul" class="task-list">
     <li v-for="task in sortedTasks" :key="task.id"
       :class="['task-item', { completed: task.completed, deleted: task.deleted }]">
-
       <!-- 1) Texto e checkbox -->
       <div class="task-info">
-        <input type="checkbox" v-model="task.completed" @change="updateTaskState(task)" />
+        <input type="checkbox" v-model="task.completed" @change="updateTaskState(task)" :disabled="task.deleted" />
 
-        <span v-if="editingTask !== task.id" @click="startEditing(task)">
+        <span v-if="editingTask !== task.id" @click="!task.completed && !task.deleted && startEditing(task)"
+          class="task-text">
           {{ task.text }}
         </span>
 
@@ -47,10 +40,15 @@
         </label>
       </div>
 
-      <!-- 3) Ações (exibido apenas quando a tarefa não está concluída ou excluída) -->
-      <div class="task-actions" v-if="!(filter === 'completed' || filter === 'deleted')">
-        <baseEditTask @edit="() => emit('edit', task.id)" />
-        <baseDeleteTask @delete="() => deleteTask(task.id)" />
+      <!-- 3) Ações -->
+      <div class="task-actions">
+        <template v-if="task.deleted">
+          <button class="restore-btn" @click="restoreTask(task.id)" title="Restaurar tarefa">♻️</button>
+        </template>
+        <template v-else-if="!task.completed">
+          <baseEditTask @edit="() => emit('edit', task.id)" />
+          <baseDeleteTask @delete="() => deleteTask(task.id)" />
+        </template>
       </div>
     </li>
   </transition-group>
@@ -74,25 +72,58 @@ interface Task {
   id: number;
   text: string;
   completed: boolean;
-  deleted: boolean;  // Campo adicionado para representar tarefas excluídas
+  deleted: boolean;
   priority: 'low' | 'medium' | 'high';
 }
 
-// Props e emit
 const { tasks } = defineProps<{ tasks: Task[] }>();
 const emit = defineEmits<{
   (e: 'edit', id: number): void;
   (e: 'delete', id: number): void;
 }>();
 
-// Filtro ativo
 const filter = ref<'low' | 'medium' | 'high' | 'all' | 'completed' | 'deleted'>('all');
 
-// Estado de edição
-const editingTask = ref<number | null>(null); // Armazena o ID da tarefa sendo editada
-const editedText = ref<string>(''); // Armazena o texto editado
+const editingTask = ref<number | null>(null);
+const editedText = ref<string>('');
 
-// Atualiza prioridade
+// Impede completar se estiver excluído
+function updateTaskState(task: Task) {
+  if (task.deleted) return;
+  if (task.completed) task.deleted = false;
+}
+
+// Marca como excluída
+function deleteTask(id: number) {
+  const task = tasks.find(t => t.id === id);
+  if (task) {
+    task.deleted = true;
+    task.completed = false;
+  }
+}
+
+// Restaura uma tarefa excluída
+function restoreTask(id: number) {
+  const task = tasks.find(t => t.id === id);
+  if (task) {
+    task.deleted = false;
+  }
+}
+
+// Inicia edição, se permitido
+function startEditing(task: Task) {
+  if (task.completed || task.deleted) return;
+  editingTask.value = task.id;
+  editedText.value = task.text;
+}
+
+function saveEdit(task: Task) {
+  if (editingTask.value === task.id && editedText.value !== task.text) {
+    task.text = editedText.value;
+  }
+  editingTask.value = null;
+}
+
 function setPriority(id: number, priority: 'low' | 'medium' | 'high') {
   const task = tasks.find(t => t.id === id);
   if (task) {
@@ -100,62 +131,24 @@ function setPriority(id: number, priority: 'low' | 'medium' | 'high') {
   }
 }
 
-// Atualiza o estado da tarefa (completa ou excluída)
-function updateTaskState(task: Task) {
-  if (task.completed) {
-    task.deleted = false;  // Se completada, a tarefa não pode ser excluída
-  }
-}
-
-// Excluir tarefa (muda para excluída)
-function deleteTask(id: number) {
-  const task = tasks.find(t => t.id === id);
-  if (task) {
-    task.deleted = true;  // Marca como excluída
-    task.completed = false;  // A tarefa não pode ser marcada como completada se excluída
-  }
-}
-
-// Inicia o modo de edição para a tarefa
-function startEditing(task: Task) {
-  editingTask.value = task.id;
-  editedText.value = task.text; // Armazena o texto original para edição
-}
-
-// Salva a edição e atualiza o texto da tarefa
-function saveEdit(task: Task) {
-  if (editingTask.value === task.id && editedText.value !== task.text) {
-    task.text = editedText.value; // Atualiza o texto da tarefa
-  }
-  editingTask.value = null; // Sai do modo de edição
-}
-
-// Ordenação e filtragem de tarefas
 const priorityOrder = { high: 0, medium: 1, low: 2 };
 
 const filteredTasks = computed(() => {
-  if (filter.value === 'completed') {
-    return tasks.filter(t => t.completed);
-  }
-  if (filter.value === 'deleted') {
-    return tasks.filter(t => t.deleted);  // Filtra as tarefas excluídas
-  }
-  if (filter.value === 'all') {
-    return tasks.filter(t => !t.completed && !t.deleted);  // Filtra tarefas não completadas nem excluídas
-  }
-  return tasks.filter(t => t.priority === filter.value && !t.completed && !t.deleted);  // Filtro por prioridade e excluindo completadas/excluídas
+  if (filter.value === 'completed') return tasks.filter(t => t.completed);
+  if (filter.value === 'deleted') return tasks.filter(t => t.deleted);
+  if (filter.value === 'all') return tasks.filter(t => !t.completed && !t.deleted);
+  return tasks.filter(t => t.priority === filter.value && !t.completed && !t.deleted);
 });
 
 const sortedTasks = computed(() =>
   [...filteredTasks.value].sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority])
 );
 
-// Contadores por prioridade e status
 const lowCount = computed(() => tasks.filter(t => t.priority === 'low' && !t.completed && !t.deleted).length);
 const mediumCount = computed(() => tasks.filter(t => t.priority === 'medium' && !t.completed && !t.deleted).length);
 const highCount = computed(() => tasks.filter(t => t.priority === 'high' && !t.completed && !t.deleted).length);
-const completedCount = computed(() => tasks.filter(t => t.completed).length); // Contador de tarefas completas
-const deletedCount = computed(() => tasks.filter(t => t.deleted).length); // Contador de tarefas excluídas
+const completedCount = computed(() => tasks.filter(t => t.completed).length);
+const deletedCount = computed(() => tasks.filter(t => t.deleted).length);
 </script>
 
 <style scoped>
@@ -283,6 +276,10 @@ const deletedCount = computed(() => tasks.filter(t => t.deleted).length); // Con
   gap: 0.25rem;
 }
 
+.task-text {
+  transition: all 0.4s ease;
+}
+
 .completed .task-text {
   text-decoration: line-through;
   color: #999;
@@ -294,7 +291,14 @@ const deletedCount = computed(() => tasks.filter(t => t.deleted).length); // Con
   font-style: italic;
 }
 
-/* Estilo para o campo de edição inline */
+.restore-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: #28a745;
+}
+
 .edit-input {
   width: 100%;
   padding: 0.5rem;
@@ -305,7 +309,6 @@ const deletedCount = computed(() => tasks.filter(t => t.deleted).length); // Con
   margin-left: 0.5rem;
 }
 
-/* Transição suave ao desaparecer/aparecer */
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.4s ease, transform 0.4s ease;

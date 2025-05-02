@@ -18,21 +18,19 @@
         </div>
       </BaseTooltipButton>
     </div>
-
     <div class="task-app">
       <div class="task-content">
         <h1>{{ $t('pt-BR.List_of_Tasks') }}</h1>
-
         <div class="top-bar">
           <baseAddTask @add="addTask" />
           <BaseTooltipButton label="Configurações" @click="openSettings">
             ⚙️
           </BaseTooltipButton>
         </div>
-
         <baseTaskList :tasks="filteredTasks" @edit="editTask" @delete="deleteTask" />
       </div>
     </div>
+    <BaseFooter /> <!-- Adicionando o rodapé aqui -->
   </div>
 </template>
 
@@ -42,6 +40,7 @@ import { useRouter } from 'vue-router';
 import BaseAddTask from '@/components/BaseAddTask.vue';
 import BaseTaskList from '@/components/BaseTaskList.vue';
 import BaseTooltipButton from '@/components/BaseTooltipButton.vue';
+import BaseFooter from '@/components/BaseFooter.vue';
 
 const tasks = ref<{ id: number; text: string; completed: boolean; priority: 'low' | 'medium' | 'high' }[]>([]);
 const nextId = ref(1);
@@ -51,7 +50,6 @@ const languageMenuVisible = ref(false);
 const availableLanguages = ['en', 'pt', 'es'];
 const currentTheme = ref(localStorage.getItem('theme') || 'light');
 
-// Alternar tema claro/escuro
 function toggleTheme() {
   currentTheme.value = currentTheme.value === 'light' ? 'dark' : 'light';
   document.body.classList.toggle('dark-theme', currentTheme.value === 'dark');
@@ -60,16 +58,18 @@ function toggleTheme() {
   document.body.classList.add(currentTheme.value);
 }
 
-// Menu de idiomas
 function toggleLanguageMenu() {
   languageMenuVisible.value = !languageMenuVisible.value;
 }
+
 const otherLanguages = computed(() => availableLanguages.filter(lang => lang !== currentLanguage.value));
+
 function changeLanguage(lang: string) {
   currentLanguage.value = lang;
   languageMenuVisible.value = false;
   console.log(`Idioma trocado para: ${lang}`);
 }
+
 function getFlag(lang: string): string {
   switch (lang) {
     case 'pt': return '🇧🇷';
@@ -79,7 +79,6 @@ function getFlag(lang: string): string {
   }
 }
 
-// Gerenciamento de tarefas
 function addTask(text: string) {
   tasks.value.push({ id: nextId.value++, text, completed: false, priority: 'low' });
 }
@@ -102,7 +101,6 @@ function openSettings() {
   router.push('/configuracoes');
 }
 
-// Mostrar todas as tarefas (sem filtro)
 const filteredTasks = computed(() => tasks.value);
 
 onMounted(() => {
@@ -122,19 +120,15 @@ onMounted(() => {
 }
 
 .task-app h1 {
-
   text-align: center;
-  /* Alinhar ao centro, por exemplo */
 }
 
 .top-bar {
   display: flex;
   justify-content: center;
-  /* Alinha os itens ao centro */
   align-items: stretch;
   gap: 3px;
   margin-left: calc(50% - 190px);
-  /*ajusta o imput e o label*/
   margin-bottom: 15px;
 }
 
@@ -143,7 +137,6 @@ onMounted(() => {
   height: 100%;
 }
 
-/* Controles de idioma e tema */
 .top-controls {
   display: flex;
   justify-content: flex-end;
@@ -223,14 +216,12 @@ body.dark-theme .task-app {
 }
 
 .task-content {
-  max-width: 600;
+  max-width: 600px;
   margin: 0 auto;
-  /* Centraliza título e top-bar juntos */
 }
 
 .task-content h1 {
   text-align: center;
-  /* Alinha o título à esquerda dentro da largura fixa */
   margin-bottom: 3px;
 }
 </style>

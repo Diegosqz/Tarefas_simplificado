@@ -1,46 +1,119 @@
 <template>
   <div class="page-wrapper">
-    <header class="page-header">
-      <h1>
-        <slot name="title" />
-      </h1>
-      <div class="header-controls">
-        <slot name="controls" />
-      </div>
+    <header class="header">
     </header>
-    <main class="page-content">
+
+    <main>
       <slot />
     </main>
+
+    <footer class="footer">
+      <BaseFooter />
+    </footer>
   </div>
 </template>
 
 <script setup lang="ts">
-// Layout básico compartilhado entre as views
+import { ref, onMounted } from 'vue';
+import { useLanguage } from './composable/useLanguage';
+import BaseFooter from './BaseFooter.vue';
+
+const { currentLanguage, changeLanguage } = useLanguage();
+
+const currentTheme = ref(localStorage.getItem('theme') || 'light');
+
+function toggleTheme() {
+  currentTheme.value = currentTheme.value === 'light' ? 'dark' : 'light';
+  document.body.classList.toggle('dark-theme', currentTheme.value === 'dark');
+  localStorage.setItem('theme', currentTheme.value);
+  document.body.classList.remove('light', 'dark');
+  document.body.classList.add(currentTheme.value);
+}
+
+function onChangeLanguage(event: Event) {
+  const select = event.target as HTMLSelectElement;
+  changeLanguage(select.value);
+}
+
+onMounted(() => {
+  if (currentTheme.value === 'dark') {
+    document.body.classList.add('dark-theme');
+  }
+});
 </script>
 
 <style scoped>
 .page-wrapper {
   max-width: var(--page-max-width);
-  margin: 2rem auto;
+  margin: 0 auto;
   padding: var(--page-padding);
   background: var(--neutral-bg);
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow-light);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-.page-header {
+.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
 }
 
-.header-controls {
+.logo h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.nav-links a {
+  color: white;
+  margin-left: 1rem;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.nav-links a.active {
+  text-decoration: underline;
+}
+
+.language-theme-controls {
   display: flex;
+  align-items: center;
   gap: 0.5rem;
 }
 
-.page-content {
-  width: 100%;
+.language-theme-controls select {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  border: none;
+  font-size: 1rem;
+}
+
+.theme-toggle {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  color: white;
+}
+
+main {
+  flex-grow: 1;
+  padding: 1rem;
+  background: var(--neutral-bg);
+  color: var(--text-color);
+}
+
+.footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
 }
 </style>

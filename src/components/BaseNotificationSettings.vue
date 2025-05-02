@@ -56,8 +56,8 @@
         {{ $t('pt-BR.Settings.addPhone') }}
       </button>
     </div>
-  </div>
 
+  </div>
 </template>
 
 
