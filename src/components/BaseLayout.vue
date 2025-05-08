@@ -14,32 +14,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { useLanguage } from './composable/useLanguage';
 import BaseFooter from './BaseFooter.vue';
 
-const { currentLanguage, changeLanguage } = useLanguage();
 
-const currentTheme = ref(localStorage.getItem('theme') || 'light');
-
-function toggleTheme() {
-  currentTheme.value = currentTheme.value === 'light' ? 'dark' : 'light';
-  document.body.classList.toggle('dark-theme', currentTheme.value === 'dark');
-  localStorage.setItem('theme', currentTheme.value);
-  document.body.classList.remove('light', 'dark');
-  document.body.classList.add(currentTheme.value);
-}
-
-function onChangeLanguage(event: Event) {
-  const select = event.target as HTMLSelectElement;
-  changeLanguage(select.value);
-}
-
-onMounted(() => {
-  if (currentTheme.value === 'dark') {
-    document.body.classList.add('dark-theme');
-  }
-});
 </script>
 
 <style scoped>

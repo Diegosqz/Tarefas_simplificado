@@ -8,11 +8,11 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import BaseTooltipButton from './BaseTooltipButton.vue';
-import { useI18n } from 'vue-i18n';
+//  import { useI18n } from 'vue-i18n';
 
-const { locale, t } = useI18n();
+//const { locale, t } = useI18n();
 const taskText = ref('');
-const showTooltip = ref(false);
+//sconst showTooltip = ref(false);
 const emit = defineEmits(['add']);
 function emitAdd() {
   const text = taskText.value.trim();

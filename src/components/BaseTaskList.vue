@@ -4,15 +4,15 @@
     {{ $t('Tasks') }}:
     <button class="filter-btn low" :class="{ active: filter === 'low' }" @click="filter = 'low'">{{ $t('Low') }}: {{
       lowCount
-    }}</button>,
+      }}</button>,
     <button class="filter-btn medium" :class="{ active: filter === 'medium' }" @click="filter = 'medium'">{{
       $t('Medium') }}: {{
         mediumCount }}</button>,
     <button class="filter-btn high" :class="{ active: filter === 'high' }" @click="filter = 'high'">{{ $t('High') }}: {{
       highCount
-    }}</button>,
+      }}</button>,
     <button class="filter-btn all" :class="{ active: filter === 'all' }" @click="filter = 'all'">{{ $t('All')
-    }}</button>,
+      }}</button>,
     <button class="filter-btn completed" :class="{ active: filter === 'completed' }" @click="filter = 'completed'">{{
       $t('Completed') }}: {{ completedCount }}</button>,
     <button class="filter-btn deleted" :class="{ active: filter === 'deleted' }" @click="filter = 'deleted'">{{
@@ -63,14 +63,16 @@
 import BaseEditTask from './BaseEditTask.vue';
 import BaseDeleteTask from './BaseDeleteTask.vue';
 import { ref, computed } from 'vue';
-import { useI18n } from 'vue-i18n';
+//import { useI18n } from 'vue-i18n';
 
-const { locale, t } = useI18n();
+//const { locale, t } = useI18n();
 
-const priorities = [
-  { label: '', value: 'low' },
-  { label: '', value: 'medium' },
-  { label: '', value: 'high' }
+type Priority = 'low' | 'medium' | 'high';
+
+const priorities: { value: Priority; label: string }[] = [
+  { value: 'low', label: 'Baixa' },
+  { value: 'medium', label: 'Média' },
+  { value: 'high', label: 'Alta' }
 ];
 
 interface Task {
