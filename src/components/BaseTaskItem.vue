@@ -12,7 +12,6 @@
 
 <script setup lang="ts">
 import baseDeleteTask from './BaseDeleteTask.vue';
-import BaseEditTask from './BaseEditTask.vue';
 import { useI18n } from 'vue-i18n';
 
 const { locale, t } = useI18n();
