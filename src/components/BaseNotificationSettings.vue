@@ -19,15 +19,20 @@
     <!-- Emails adicionais -->
     <div v-for="(email, index) in additionalEmails" :key="`email-${index}`" class="setting-item">
       <label class="placeholder-label"></label>
-      <input type="email" v-model="email.value" :readonly="email.locked" :placeholder="$t('settings.addEmail')" />
-
+      <div class="input-wrapper">
+        <input type="email" v-model="email.value" :readonly="email.locked" :placeholder="$t('settings.addEmail')"
+          :class="{ 'input-error': emailErrors.includes(index) }" @input="clearEmailError(index)" />
+        <!-- Mensagem de erro -->
+        <span v-if="emailErrors.includes(index)" class="error-text">Campo vazio não pode ser adicionado</span>
+      </div>
       <div class="actions">
         <template v-if="pendingEmailDeletion === index">
           <button @click="confirmRemoveEmail(index)">✅</button>
           <button @click="cancelRemoveEmail">❌</button>
         </template>
         <template v-else>
-          <button v-if="email.locked" @click="editEmail(index)">✏️</button>
+          <!-- Ícone de Edição (✏️) aparece apenas se o email já foi adicionado -->
+          <button v-if="email.value && !email.locked" @click="editEmail(index)">✏️</button>
           <button v-else @click="lockEmail(index)">✔️</button>
           <button @click="askRemoveEmail(index)">🗑️</button>
         </template>
@@ -49,15 +54,20 @@
     <!-- Telefones adicionais -->
     <div v-for="(phone, index) in additionalPhones" :key="`phone-${index}`" class="setting-item">
       <label class="placeholder-label"></label>
-      <input type="tel" v-model="phone.value" :readonly="phone.locked" :placeholder="$t('settings.addPhone')" />
-
+      <div class="input-wrapper">
+        <input type="tel" v-model="phone.value" :readonly="phone.locked" :placeholder="$t('settings.addPhone')"
+          :class="{ 'input-error': phoneErrors.includes(index) }" @input="clearPhoneError(index)" />
+        <!-- Mensagem de erro -->
+        <span v-if="phoneErrors.includes(index)" class="error-text">Campo vazio não pode ser adicionado</span>
+      </div>
       <div class="actions">
         <template v-if="pendingPhoneDeletion === index">
           <button @click="confirmRemovePhone(index)">✅</button>
           <button @click="cancelRemovePhone">❌</button>
         </template>
         <template v-else>
-          <button v-if="phone.locked" @click="editPhone(index)">✏️</button>
+          <!-- Ícone de Edição (✏️) aparece apenas se o telefone já foi adicionado -->
+          <button v-if="phone.value && !phone.locked" @click="editPhone(index)">✏️</button>
           <button v-else @click="lockPhone(index)">✔️</button>
           <button @click="askRemovePhone(index)">🗑️</button>
         </template>
@@ -106,6 +116,10 @@ const additionalPhones = ref<InputItem[]>([]);
 const pendingEmailDeletion = ref<number | null>(null);
 const pendingPhoneDeletion = ref<number | null>(null);
 
+// Erros de validação
+const emailErrors = ref<number[]>([]);
+const phoneErrors = ref<number[]>([]);
+
 // Atualizações principais
 function updateNotifications(event: Event) {
   emit('update:notificationsEnabled', (event.target as HTMLInputElement).checked);
@@ -122,8 +136,12 @@ function addEmail() {
   additionalEmails.value.push({ value: '', locked: false });
 }
 function lockEmail(index: number) {
-  if (additionalEmails.value[index].value.trim()) {
-    additionalEmails.value[index].locked = true;
+  const email = additionalEmails.value[index];
+  if (email.value.trim()) {
+    email.locked = true;
+    emailErrors.value = emailErrors.value.filter(i => i !== index); // Limpa erro se o valor for válido
+  } else {
+    if (!emailErrors.value.includes(index)) emailErrors.value.push(index); // Adiciona erro se o campo estiver vazio
   }
 }
 function editEmail(index: number) {
@@ -145,8 +163,12 @@ function addPhone() {
   additionalPhones.value.push({ value: '', locked: false });
 }
 function lockPhone(index: number) {
-  if (additionalPhones.value[index].value.trim()) {
-    additionalPhones.value[index].locked = true;
+  const phone = additionalPhones.value[index];
+  if (phone.value.trim()) {
+    phone.locked = true;
+    phoneErrors.value = phoneErrors.value.filter(i => i !== index); // Limpa erro se o valor for válido
+  } else {
+    if (!phoneErrors.value.includes(index)) phoneErrors.value.push(index); // Adiciona erro se o campo estiver vazio
   }
 }
 function editPhone(index: number) {
@@ -161,6 +183,18 @@ function cancelRemovePhone() {
 function confirmRemovePhone(index: number) {
   additionalPhones.value.splice(index, 1);
   pendingPhoneDeletion.value = null;
+}
+
+function clearEmailError(index: number) {
+  if (additionalEmails.value[index].value.trim()) {
+    emailErrors.value = emailErrors.value.filter(i => i !== index); // Limpa o erro quando o valor for preenchido
+  }
+}
+
+function clearPhoneError(index: number) {
+  if (additionalPhones.value[index].value.trim()) {
+    phoneErrors.value = phoneErrors.value.filter(i => i !== index); // Limpa o erro quando o valor for preenchido
+  }
 }
 </script>
 
@@ -224,5 +258,23 @@ button {
 
 button:hover {
   color: #333;
+}
+
+/* Estilo de erro */
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.input-error {
+  border: 1px solid red;
+  background-color: #ffe6e6;
+}
+
+.error-text {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
 }
 </style>
