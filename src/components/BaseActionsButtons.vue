@@ -7,6 +7,12 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
+
+const emit = defineEmits<{
+  (e: 'save'): void;
+}>();
+
+
 // Props do componente
 const { isFormValid } = defineProps<{ isFormValid: boolean }>();
 

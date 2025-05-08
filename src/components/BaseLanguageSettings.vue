@@ -24,7 +24,7 @@ const emit = defineEmits<{
   (e: 'update:selectedLanguage', v: string): void
 }>()
 
-const { locale, t } = useI18n()
+const { locale } = useI18n()
 
 // Sincroniza o i18n
 watch(() => props.selectedLanguage, v => {

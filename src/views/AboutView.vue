@@ -1,14 +1,14 @@
 <template>
   <div class="page-wrapper">
-    <!-- Contêiner para idioma e tema -->
     <div class="top-controls">
       <BaseTooltipButton label="Trocar idioma" @click="toggleLanguageMenu">
-        <span class="current-language">{{ getFlag(currentLanguage) }}
+        <span class="current-language">
+          {{ getFlag(locale) }} <!-- ✅ Usa locale diretamente -->
           <span class="arrow" :class="{ open: languageMenuVisible }">▾</span>
         </span>
       </BaseTooltipButton>
       <div v-if="languageMenuVisible" class="language-options">
-        <span v-for="lang in otherLanguages" :key="lang" @click.stop="changeLanguage(lang)">
+        <span v-for="lang in otherLanguages" :key="lang" @click.stop="selectLanguage(lang)">
           {{ getFlag(lang) }}
         </span>
       </div>
@@ -37,23 +37,21 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { useThemeStore } from '@/stores/theme';
-import { useI18n } from 'vue-i18n'
+import { useLanguage } from '@/components/composable/useLanguage.ts'; // ✅ Importa o composable
 import BaseAddTask from '@/components/BaseAddTask.vue';
 import BaseTaskList from '@/components/BaseTaskList.vue';
 import BaseTooltipButton from '@/components/BaseTooltipButton.vue';
 import BaseFooter from '@/components/BaseFooter.vue';
 
-const { locale } = useI18n();
-
-// Tema global com Pinia
+// Tema
 const themeStore = useThemeStore();
 const currentTheme = computed(() => themeStore.theme);
 function toggleTheme() {
   themeStore.toggleTheme();
 }
 
-// Aplicar classe do tema ao carregar e quando mudar
 onMounted(() => {
   document.body.classList.remove('light', 'dark');
   document.body.classList.add(currentTheme.value);
@@ -63,29 +61,21 @@ watch(currentTheme, (theme) => {
   document.body.classList.add(theme);
 });
 
-// Idioma local
-const currentLanguage = ref('pt-BR');
-const languageMenuVisible = ref(false);
-const availableLanguages = ['pt-BR', 'en-US', 'es'];
-const otherLanguages = computed(() => availableLanguages.filter(lang => lang !== currentLanguage.value));
+// ✅ Idioma centralizado
+const {
+  locale,
+  changeLanguage,
+  getFlag,
+  otherLanguages
+} = useLanguage();
 
+const languageMenuVisible = ref(false);
 function toggleLanguageMenu() {
   languageMenuVisible.value = !languageMenuVisible.value;
 }
-function changeLanguage(lang: string) {
-  locale.value = lang;
-  currentLanguage.value = lang;
+function selectLanguage(lang: string) {
+  changeLanguage(lang); // usa função centralizada
   languageMenuVisible.value = false;
-  console.log('Idioma alterado para:', locale.value);
-}
-
-function getFlag(lang: string): string {
-  switch (lang) {
-    case 'pt-BR': return '🇧🇷';
-    case 'en-US': return '🇺🇸';
-    case 'es': return '🇪🇸';
-    default: return '🌐';
-  }
 }
 
 // Tarefas
@@ -114,6 +104,8 @@ function openSettings() {
   router.push('/configuracoes');
 }
 </script>
+
+
 
 <style scoped>
 .task-app {

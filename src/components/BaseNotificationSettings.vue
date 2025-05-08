@@ -64,14 +64,9 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
 import { useThemeStore } from '@/stores/theme';
-import { useI18n } from 'vue-i18n';
-const { locale } = useI18n();
 // Tema global com Pinia
 const themeStore = useThemeStore();
 const currentTheme = computed(() => themeStore.theme);
-function toggleTheme() {
-  themeStore.toggleTheme();
-}
 // Aplicar classe do tema ao carregar e quando mudar
 function applyTheme(theme: string) {
   document.body.classList.remove('light', 'dark');
@@ -86,28 +81,8 @@ watch(currentTheme, (theme) => {
 
 applyTheme(currentTheme.value);
 // Idioma local
-const currentLanguage = ref('pt-BR');
-const languageMenuVisible = ref(false);
-const availableLanguages = ['pt-BR', 'en-US', 'es'];
-const otherLanguages = computed(() => availableLanguages.filter(lang => lang !== currentLanguage.value));
 
-function toggleLanguageMenu() {
-  languageMenuVisible.value = !languageMenuVisible.value;
-}
-function changeLanguage(lang: string) {
-  locale.value = lang;
-  currentLanguage.value = lang;
-  languageMenuVisible.value = false;
-}
 
-function getFlag(lang: string): string {
-  switch (lang) {
-    case 'pt-BR': return '🇧🇷';
-    case 'en-US': return '🇺🇸';
-    case 'es': return '🇪🇸';
-    default: return '🌐';
-  }
-}
 
 const props = defineProps({
   notificationsEnabled: Boolean,

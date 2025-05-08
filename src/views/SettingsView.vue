@@ -7,13 +7,13 @@
           <div class="language-wrapper">
             <BaseTooltipButton label="Trocar idioma" @click="toggleLanguageMenu">
               <span class="current-language">
-                {{ getFlag(currentLanguage) }}
+                {{ getFlag(locale) }} <!-- ✅ Usa locale diretamente -->
                 <span class="arrow" :class="{ open: languageMenuVisible }">▾</span>
               </span>
             </BaseTooltipButton>
 
             <div v-if="languageMenuVisible" class="language-options">
-              <span v-for="lang in otherLanguages" :key="lang" @click.stop="changeLanguage(lang)">
+              <span v-for="lang in otherLanguages" :key="lang" @click.stop="selectLanguage(lang)">
                 {{ getFlag(lang) }}
               </span>
             </div>
@@ -60,8 +60,8 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n';
 import { useThemeStore } from '@/stores/theme';
+import { useLanguage } from '@/components/composable/useLanguage.ts'; // ✅ Importa o composable
 import {
   BellIcon,
   UserIcon,
@@ -74,21 +74,19 @@ import BaseNotificationSettings from '@/components/BaseNotificationSettings.vue'
 import BaseUserSettings from '@/components/BaseUserSettings.vue';
 import BaseActionButtons from '@/components/BaseActionsButtons.vue';
 import BaseTooltipButton from '@/components/BaseTooltipButton.vue';
-import BaseFooter from '@/components/BaseFooter.vue';
 
+// Navegação
 const router = useRouter();
-const { locale } = useI18n();
 
-// Tema global com Pinia
+// Tema
 const themeStore = useThemeStore();
 const currentTheme = computed(() => themeStore.theme);
 function toggleTheme() {
   themeStore.toggleTheme();
 }
-
 function applyTheme(theme: string) {
   document.documentElement.setAttribute('data-theme', theme);
-};
+}
 onMounted(() => {
   applyTheme(currentTheme.value);
 });
@@ -96,31 +94,24 @@ watch(currentTheme, (theme) => {
   applyTheme(theme);
 });
 
+// ✅ Idioma centralizado
+const {
+  locale,
+  changeLanguage,
+  getFlag,
+  otherLanguages
+} = useLanguage();
 
-// Idioma local
-const currentLanguage = ref('pt-BR');
 const languageMenuVisible = ref(false);
-const availableLanguages = ['pt-BR', 'en-US', 'es'];
-const otherLanguages = computed(() => availableLanguages.filter(lang => lang !== currentLanguage.value));
-
 function toggleLanguageMenu() {
   languageMenuVisible.value = !languageMenuVisible.value;
 }
-function changeLanguage(lang: string) {
-  locale.value = lang;
-  currentLanguage.value = lang;
+function selectLanguage(lang: string) {
+  changeLanguage(lang); // usa função centralizada
   languageMenuVisible.value = false;
-  console.log('Idioma alterado para:', locale.value);
 }
-function getFlag(lang: string): string {
-  switch (lang) {
-    case 'pt-BR': return '🇧🇷';
-    case 'en-US': return '🇺🇸';
-    case 'es': return '🇪🇸';
-    default: return '🌐';
-  }
-}
-// Tabs e Formulários
+
+// Tabs e formulário
 const activeTab = ref<'notifications' | 'user'>('notifications');
 const notificationsEnabled = ref(true);
 const notificationEmail = ref('');
