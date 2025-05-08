@@ -2,7 +2,7 @@
   <div class="settings-page">
     <div class="settings-header">
       <div class="header-title-with-controls">
-        <h1>{{ $t('Settings.title') }}</h1>
+        <h1>{{ $t('settings.title') }}</h1>
         <div class="top-controls-inline">
           <div class="language-wrapper">
             <BaseTooltipButton label="Trocar idioma" @click="toggleLanguageMenu">
@@ -135,10 +135,10 @@ const isFormValid = computed(() =>
 
 function saveSettings() {
   alert(
-    `${$t('Settings.user.save')}:\n` +
-    `${userName.value} - ${$t('Settings.user.name')}\n` +
-    `${dn.value} - ${$t('Settings.user.birthdate')}\n` +
-    `${email.value} - ${$t('Settings.email')}`
+    `${$t('settings.user.save')}:\n` +
+    `${userName.value} - ${$t('settings.user.name')}\n` +
+    `${dn.value} - ${$t('settings.user.birthdate')}\n` +
+    `${email.value} - ${$t('settings.email')}`
   );
   router.push({ name: 'AboutView' });
 }

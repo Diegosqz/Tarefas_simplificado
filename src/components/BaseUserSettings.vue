@@ -5,7 +5,7 @@
       <label for="name" class="input-label">
         <UserIcon class="icon" aria-hidden="true" />
       </label>
-      <input id="name" v-model="localUserName" :placeholder="$t('Settings.insertorname')" required />
+      <input id="name" v-model="localUserName" :placeholder="$t('settings.insertorname')" required />
 
       <label for="dn" class="input-label">
         <CalendarIcon class="icon" aria-hidden="true" />
@@ -24,44 +24,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { ref, watch } from 'vue';
 import { UserIcon, CalendarIcon, MailIcon } from 'lucide-vue-next';
-const { t } = useI18n();
-const currentLanguage = ref('pt');
-const languageMenuVisible = ref(false);
-const availableLanguages = ['en', 'pt', 'es'];
-const currentTheme = ref(localStorage.getItem('theme') || 'light');
-
-// Alternar tema claro/escuro
-function toggleTheme() {
-  currentTheme.value = currentTheme.value === 'light' ? 'dark' : 'light';
-  document.body.classList.toggle('dark-theme', currentTheme.value === 'dark');
-  localStorage.setItem('theme', currentTheme.value);
-  document.body.classList.remove('light', 'dark');
-  document.body.classList.add(currentTheme.value);
-}
-
-// Menu de idiomas
-function toggleLanguageMenu() {
-  languageMenuVisible.value = !languageMenuVisible.value;
-}
-const otherLanguages = computed(() => availableLanguages.filter(lang => lang !== currentLanguage.value));
-function changeLanguage(lang: string) {
-  watch(currentLanguage, (lang) => {
-    locale.value = lang;
-  });
-  languageMenuVisible.value = false;
-  console.log(`Idioma trocado para: ${lang}`);
-}
-function getFlag(lang: string): string {
-  switch (lang) {
-    case 'pt': return '🇧🇷';
-    case 'en': return '🇺🇸';
-    case 'es': return '🇪🇸';
-    default: return '🌐';
-  }
-}
 
 // Props
 const props = defineProps<{
