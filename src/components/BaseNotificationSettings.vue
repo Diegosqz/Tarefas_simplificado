@@ -73,14 +73,18 @@ function toggleTheme() {
   themeStore.toggleTheme();
 }
 // Aplicar classe do tema ao carregar e quando mudar
-onMounted(() => {
+function applyTheme(theme: string) {
   document.body.classList.remove('light', 'dark');
-  document.body.classList.add(currentTheme.value);
+  document.body.classList.add(theme)
+};
+onMounted(() => {
+  applyTheme(currentTheme.value);
 });
 watch(currentTheme, (theme) => {
-  document.body.classList.remove('light', 'dark');
-  document.body.classList.add(theme);
+  applyTheme(theme);
 });
+
+applyTheme(currentTheme.value);
 // Idioma local
 const currentLanguage = ref('pt-BR');
 const languageMenuVisible = ref(false);

@@ -76,6 +76,7 @@ function changeLanguage(lang: string) {
   locale.value = lang;
   currentLanguage.value = lang;
   languageMenuVisible.value = false;
+  console.log('Idioma alterado para:', locale.value);
 }
 
 function getFlag(lang: string): string {

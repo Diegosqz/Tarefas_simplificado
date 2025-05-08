@@ -4,7 +4,6 @@
       <div class="header-title-with-controls">
         <h1>{{ $t('Settings.title') }}</h1>
         <div class="top-controls-inline">
-          <!-- Idioma -->
           <div class="language-wrapper">
             <BaseTooltipButton label="Trocar idioma" @click="toggleLanguageMenu">
               <span class="current-language">
@@ -20,7 +19,6 @@
             </div>
           </div>
 
-          <!-- Tema -->
           <BaseTooltipButton label="Alternar Tema" @click="toggleTheme">
             <div class="theme-switcher">
               <span>{{ currentTheme === 'dark' ? '🌙' : '☀️' }}</span>
@@ -29,7 +27,6 @@
         </div>
       </div>
 
-      <!-- Abas -->
       <div class="tabs">
         <button class="tab-button" :class="{ active: activeTab === 'notifications' }"
           @click="activeTab = 'notifications'">
@@ -41,7 +38,6 @@
       </div>
     </div>
 
-    <!-- Conteúdo -->
     <div class="settings-content">
       <div v-if="activeTab === 'notifications'">
         <BaseNotificationSettings :icon-email="MailIcon" :icon-phone="PhoneIcon"
@@ -90,15 +86,16 @@ function toggleTheme() {
   themeStore.toggleTheme();
 }
 
-// Aplicar classe do tema ao carregar e quando mudar
+function applyTheme(theme: string) {
+  document.documentElement.setAttribute('data-theme', theme);
+};
 onMounted(() => {
-  document.body.classList.remove('light', 'dark');
-  document.body.classList.add(currentTheme.value);
+  applyTheme(currentTheme.value);
 });
 watch(currentTheme, (theme) => {
-  document.body.classList.remove('light', 'dark');
-  document.body.classList.add(theme);
+  applyTheme(theme);
 });
+
 
 // Idioma local
 const currentLanguage = ref('pt-BR');
@@ -113,6 +110,7 @@ function changeLanguage(lang: string) {
   locale.value = lang;
   currentLanguage.value = lang;
   languageMenuVisible.value = false;
+  console.log('Idioma alterado para:', locale.value);
 }
 function getFlag(lang: string): string {
   switch (lang) {
@@ -137,16 +135,22 @@ const isFormValid = computed(() =>
 
 function saveSettings() {
   alert(
-    `${t('.user.save')}:\n` +
-    `${userName.value} - ${t('user.name')}\n` +
-    `${dn.value} - ${t('user.birthdate')}\n` +
-    `${email.value} - ${t('settings.email')}`
+    `${$t('Settings.user.save')}:\n` +
+    `${userName.value} - ${$t('Settings.user.name')}\n` +
+    `${dn.value} - ${$t('Settings.user.birthdate')}\n` +
+    `${email.value} - ${$t('Settings.email')}`
   );
   router.push({ name: 'AboutView' });
 }
 </script>
 
 <style scoped>
+.settings-page {
+  background-color: var(--neutral-bg);
+  color: var(--text-color);
+  padding: 20px;
+}
+
 .settings-header {
   display: flex;
   flex-direction: column;
@@ -175,8 +179,8 @@ function saveSettings() {
   top: 100%;
   left: 0;
   margin-top: 5px;
-  background-color: #ffffff;
-  border: 1px solid #ddd;
+  background-color: var(--neutral-bg-light);
+  border: 1px solid var(--neutral-border);
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -190,6 +194,7 @@ function saveSettings() {
   font-size: 18px;
   padding: 5px;
   cursor: pointer;
+  color: var(--text-color);
 }
 
 .language-options span:hover {
@@ -200,6 +205,7 @@ function saveSettings() {
   font-size: 18px;
   cursor: pointer;
   user-select: none;
+  color: var(--text-color);
 }
 
 .current-language {
@@ -207,6 +213,7 @@ function saveSettings() {
   display: flex;
   align-items: center;
   gap: 4px;
+  color: var(--text-color);
 }
 
 .arrow {
@@ -248,10 +255,5 @@ function saveSettings() {
 
 .settings-content {
   margin-top: 20px;
-}
-
-body.dark {
-  background-color: #121212;
-  color: #e0e0e0;
 }
 </style>

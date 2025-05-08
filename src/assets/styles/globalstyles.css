@@ -1,6 +1,10 @@
+/* globalstyles.css */
 :root {
   --primary-color: #42b983;
-  --neutral-bg: #ffffff;
+  --neutral-bg-light: #ffffff;
+  --neutral-bg-dark: #121212;
+  --text-color-light: #333;
+  --text-color-dark: #e0e0e0;
   --neutral-border: #ccc;
   --box-shadow-light: 0 4px 12px rgba(0, 0, 0, 0.05);
   --border-radius: 8px;
@@ -10,13 +14,19 @@
   font-family: 'Inter', sans-serif;
   font-size: 16px;
   line-height: 1.5;
-  color: #333;
+  color: var(--text-color-light); /* Cor padrão para o tema claro */
+  background-color: var(--neutral-bg-light); /* Fundo padrão para o tema claro */
+  transition: background-color 0.3s, color 0.3s;
 }
 
-body.light, body.dark {
-  background-color: var(--neutral-bg);
-  color: var(--text-color);
-  transition: background-color 0.3s, color 0.3s;
+html[data-theme='light'] {
+  --neutral-bg: var(--neutral-bg-light);
+  --text-color: var(--text-color-light);
+}
+
+html[data-theme='dark'] {
+  --neutral-bg: var(--neutral-bg-dark);
+  --text-color: var(--text-color-dark);
 }
 
 .page-wrapper {
@@ -31,4 +41,12 @@ body.light, body.dark {
 h1 {
   font-size: 2rem;
   margin-bottom: 1rem;
+  color: var(--text-color); /* Use a variável de cor */
+}
+
+/* Adicione ou modifique outros estilos conforme necessário para usar as variáveis --neutral-bg e --text-color */
+body {
+  background-color: var(--neutral-bg);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
 }
