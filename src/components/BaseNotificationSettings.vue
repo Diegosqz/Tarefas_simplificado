@@ -12,8 +12,15 @@
     <!-- Email principal -->
     <div class="setting-item">
       <label for="notification-email">{{ $t('settings.email') }}:</label>
-      <input id="notification-email" type="email" :value="notificationEmail" @input="updateEmail"
-        :placeholder="$t('settings.email')" />
+      <div class="input-wrapper">
+        <input id="notification-email" type="email" v-model="mainEmail" :readonly="mainEmailLocked"
+          :placeholder="$t('settings.email')" :class="{ 'input-error': mainEmailError }" @input="clearMainEmailError" />
+        <span v-if="mainEmailError" class="error-text">Campo vazio não pode ser adicionado</span>
+      </div>
+      <div class="actions">
+        <button v-if="mainEmailLocked && mainEmail" @click="editMainEmail">✏️</button>
+        <button v-else @click="lockMainEmail">✔️</button>
+      </div>
     </div>
 
     <!-- Emails adicionais -->
@@ -22,7 +29,6 @@
       <div class="input-wrapper">
         <input type="email" v-model="email.value" :readonly="email.locked" :placeholder="$t('settings.addEmail')"
           :class="{ 'input-error': emailErrors.includes(index) }" @input="clearEmailError(index)" />
-        <!-- Mensagem de erro -->
         <span v-if="emailErrors.includes(index)" class="error-text">Campo vazio não pode ser adicionado</span>
       </div>
       <div class="actions">
@@ -31,8 +37,7 @@
           <button @click="cancelRemoveEmail">❌</button>
         </template>
         <template v-else>
-          <!-- Ícone de Edição (✏️) aparece apenas se o email já foi adicionado -->
-          <button v-if="email.value && !email.locked" @click="editEmail(index)">✏️</button>
+          <button v-if="email.value && email.locked" @click="editEmail(index)">✏️</button>
           <button v-else @click="lockEmail(index)">✔️</button>
           <button @click="askRemoveEmail(index)">🗑️</button>
         </template>
@@ -47,8 +52,15 @@
     <!-- Telefone principal -->
     <div class="setting-item">
       <label for="notification-phone">{{ $t('settings.phone') }}:</label>
-      <input id="notification-phone" type="tel" :value="notificationPhone" @input="updatePhone"
-        :placeholder="$t('settings.phone')" />
+      <div class="input-wrapper">
+        <input id="notification-phone" type="tel" v-model="mainPhone" :readonly="mainPhoneLocked"
+          :placeholder="$t('settings.phone')" :class="{ 'input-error': mainPhoneError }" @input="clearMainPhoneError" />
+        <span v-if="mainPhoneError" class="error-text">Campo vazio não pode ser adicionado</span>
+      </div>
+      <div class="actions">
+        <button v-if="mainPhoneLocked && mainPhone" @click="editMainPhone">✏️</button>
+        <button v-else @click="lockMainPhone">✔️</button>
+      </div>
     </div>
 
     <!-- Telefones adicionais -->
@@ -57,7 +69,6 @@
       <div class="input-wrapper">
         <input type="tel" v-model="phone.value" :readonly="phone.locked" :placeholder="$t('settings.addPhone')"
           :class="{ 'input-error': phoneErrors.includes(index) }" @input="clearPhoneError(index)" />
-        <!-- Mensagem de erro -->
         <span v-if="phoneErrors.includes(index)" class="error-text">Campo vazio não pode ser adicionado</span>
       </div>
       <div class="actions">
@@ -66,8 +77,7 @@
           <button @click="cancelRemovePhone">❌</button>
         </template>
         <template v-else>
-          <!-- Ícone de Edição (✏️) aparece apenas se o telefone já foi adicionado -->
-          <button v-if="phone.value && !phone.locked" @click="editPhone(index)">✏️</button>
+          <button v-if="phone.value && phone.locked" @click="editPhone(index)">✏️</button>
           <button v-else @click="lockPhone(index)">✔️</button>
           <button @click="askRemovePhone(index)">🗑️</button>
         </template>
@@ -107,31 +117,65 @@ const emit = defineEmits([
   'update:notificationPhone',
 ]);
 
-// Modelos de entrada
+// Main email/phone state
+const mainEmail = ref(props.notificationEmail || '');
+const mainPhone = ref(props.notificationPhone || '');
+const mainEmailLocked = ref(false);
+const mainPhoneLocked = ref(false);
+const mainEmailError = ref(false);
+const mainPhoneError = ref(false);
+
+// Emit on change
+watch(mainEmail, (val) => emit('update:notificationEmail', val));
+watch(mainPhone, (val) => emit('update:notificationPhone', val));
+
+// Modelos adicionais
 type InputItem = { value: string; locked: boolean };
 const additionalEmails = ref<InputItem[]>([]);
 const additionalPhones = ref<InputItem[]>([]);
 
-// Exclusão inline
 const pendingEmailDeletion = ref<number | null>(null);
 const pendingPhoneDeletion = ref<number | null>(null);
 
-// Erros de validação
 const emailErrors = ref<number[]>([]);
 const phoneErrors = ref<number[]>([]);
 
-// Atualizações principais
-function updateNotifications(event: Event) {
-  emit('update:notificationsEnabled', (event.target as HTMLInputElement).checked);
+// Principal
+function lockMainEmail() {
+  if (mainEmail.value.trim()) {
+    mainEmailLocked.value = true;
+    mainEmailError.value = false;
+  } else {
+    mainEmailError.value = true;
+  }
 }
-function updateEmail(event: Event) {
-  emit('update:notificationEmail', (event.target as HTMLInputElement).value);
+function editMainEmail() {
+  mainEmailLocked.value = false;
 }
-function updatePhone(event: Event) {
-  emit('update:notificationPhone', (event.target as HTMLInputElement).value);
+function clearMainEmailError() {
+  if (mainEmail.value.trim()) {
+    mainEmailError.value = false;
+  }
 }
 
-// Emails
+function lockMainPhone() {
+  if (mainPhone.value.trim()) {
+    mainPhoneLocked.value = true;
+    mainPhoneError.value = false;
+  } else {
+    mainPhoneError.value = true;
+  }
+}
+function editMainPhone() {
+  mainPhoneLocked.value = false;
+}
+function clearMainPhoneError() {
+  if (mainPhone.value.trim()) {
+    mainPhoneError.value = false;
+  }
+}
+
+// Emails adicionais
 function addEmail() {
   additionalEmails.value.push({ value: '', locked: false });
 }
@@ -139,9 +183,9 @@ function lockEmail(index: number) {
   const email = additionalEmails.value[index];
   if (email.value.trim()) {
     email.locked = true;
-    emailErrors.value = emailErrors.value.filter(i => i !== index); // Limpa erro se o valor for válido
+    emailErrors.value = emailErrors.value.filter(i => i !== index);
   } else {
-    if (!emailErrors.value.includes(index)) emailErrors.value.push(index); // Adiciona erro se o campo estiver vazio
+    if (!emailErrors.value.includes(index)) emailErrors.value.push(index);
   }
 }
 function editEmail(index: number) {
@@ -157,8 +201,13 @@ function confirmRemoveEmail(index: number) {
   additionalEmails.value.splice(index, 1);
   pendingEmailDeletion.value = null;
 }
+function clearEmailError(index: number) {
+  if (additionalEmails.value[index].value.trim()) {
+    emailErrors.value = emailErrors.value.filter(i => i !== index);
+  }
+}
 
-// Telefones
+// Telefones adicionais
 function addPhone() {
   additionalPhones.value.push({ value: '', locked: false });
 }
@@ -166,9 +215,9 @@ function lockPhone(index: number) {
   const phone = additionalPhones.value[index];
   if (phone.value.trim()) {
     phone.locked = true;
-    phoneErrors.value = phoneErrors.value.filter(i => i !== index); // Limpa erro se o valor for válido
+    phoneErrors.value = phoneErrors.value.filter(i => i !== index);
   } else {
-    if (!phoneErrors.value.includes(index)) phoneErrors.value.push(index); // Adiciona erro se o campo estiver vazio
+    if (!phoneErrors.value.includes(index)) phoneErrors.value.push(index);
   }
 }
 function editPhone(index: number) {
@@ -184,16 +233,9 @@ function confirmRemovePhone(index: number) {
   additionalPhones.value.splice(index, 1);
   pendingPhoneDeletion.value = null;
 }
-
-function clearEmailError(index: number) {
-  if (additionalEmails.value[index].value.trim()) {
-    emailErrors.value = emailErrors.value.filter(i => i !== index); // Limpa o erro quando o valor for preenchido
-  }
-}
-
 function clearPhoneError(index: number) {
   if (additionalPhones.value[index].value.trim()) {
-    phoneErrors.value = phoneErrors.value.filter(i => i !== index); // Limpa o erro quando o valor for preenchido
+    phoneErrors.value = phoneErrors.value.filter(i => i !== index);
   }
 }
 </script>
@@ -260,7 +302,6 @@ button:hover {
   color: #333;
 }
 
-/* Estilo de erro */
 .input-wrapper {
   display: flex;
   flex-direction: column;
