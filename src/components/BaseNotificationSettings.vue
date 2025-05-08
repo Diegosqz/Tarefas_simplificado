@@ -1,19 +1,15 @@
 <template>
   <div>
-
     <!-- Notificações -->
     <div class="setting-item">
       <label for="Notificações">{{ $t('settings.notifications') }}:</label>
       <div class="status-toggle">
-        <span>
-          {{ notificationsEnabled ? $t('settings.enabled') : $t('settings.disabled') }}
-        </span>
+        <span>{{ notificationsEnabled ? $t('settings.enabled') : $t('settings.disabled') }}</span>
         <input id="notifications" type="checkbox" :checked="notificationsEnabled" @change="updateNotifications" />
       </div>
     </div>
 
     <!-- Email principal -->
-
     <div class="setting-item">
       <label for="notification-email">{{ $t('settings.email') }}:</label>
       <input id="notification-email" type="email" :value="notificationEmail" @input="updateEmail"
@@ -21,22 +17,29 @@
     </div>
 
     <!-- Emails adicionais -->
-
-    <div v-for="(email, index) in additionalEmails" :key="`extra-email-${index}`" class="setting-item">
+    <div v-for="(email, index) in additionalEmails" :key="`email-${index}`" class="setting-item">
       <label class="placeholder-label"></label>
-      <input type="email" v-model="additionalEmails[index]" :placeholder="$t('settings.addEmail')" />
-      <button type="button" @click="removeEmail(index)">🗑️</button>
+      <input type="email" v-model="email.value" :readonly="email.locked" :placeholder="$t('settings.addEmail')" />
+
+      <div class="actions">
+        <template v-if="pendingEmailDeletion === index">
+          <button @click="confirmRemoveEmail(index)">✅</button>
+          <button @click="cancelRemoveEmail">❌</button>
+        </template>
+        <template v-else>
+          <button v-if="email.locked" @click="editEmail(index)">✏️</button>
+          <button v-else @click="lockEmail(index)">✔️</button>
+          <button @click="askRemoveEmail(index)">🗑️</button>
+        </template>
+      </div>
     </div>
 
     <div class="setting-item">
       <span class="placeholder-label"></span>
-      <button class="add-button" type="button" @click="addEmail">
-        {{ $t('settings.addEmail') }}
-      </button>
+      <button class="add-button" @click="addEmail">{{ $t('settings.addEmail') }}</button>
     </div>
 
     <!-- Telefone principal -->
-
     <div class="setting-item">
       <label for="notification-phone">{{ $t('settings.phone') }}:</label>
       <input id="notification-phone" type="tel" :value="notificationPhone" @input="updatePhone"
@@ -44,66 +47,68 @@
     </div>
 
     <!-- Telefones adicionais -->
-
-    <div v-for="(phone, index) in additionalPhones" :key="`extra-phone-${index}`" class="setting-item">
+    <div v-for="(phone, index) in additionalPhones" :key="`phone-${index}`" class="setting-item">
       <label class="placeholder-label"></label>
-      <input type="tel" v-model="additionalPhones[index]" :placeholder="$t('settings.addPhone')" />
-      <button type="button" @click="removePhone(index)">🗑️</button>
+      <input type="tel" v-model="phone.value" :readonly="phone.locked" :placeholder="$t('settings.addPhone')" />
+
+      <div class="actions">
+        <template v-if="pendingPhoneDeletion === index">
+          <button @click="confirmRemovePhone(index)">✅</button>
+          <button @click="cancelRemovePhone">❌</button>
+        </template>
+        <template v-else>
+          <button v-if="phone.locked" @click="editPhone(index)">✏️</button>
+          <button v-else @click="lockPhone(index)">✔️</button>
+          <button @click="askRemovePhone(index)">🗑️</button>
+        </template>
+      </div>
     </div>
+
     <div class="setting-item">
       <span class="placeholder-label"></span>
-      <button class="add-button" type="button" @click="addPhone">
-        {{ $t('settings.addPhone') }}
-      </button>
+      <button class="add-button" @click="addPhone">{{ $t('settings.addPhone') }}</button>
     </div>
-
   </div>
 </template>
-
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
 import { useThemeStore } from '@/stores/theme';
-// Tema global com Pinia
+
 const themeStore = useThemeStore();
 const currentTheme = computed(() => themeStore.theme);
-// Aplicar classe do tema ao carregar e quando mudar
+
 function applyTheme(theme: string) {
   document.body.classList.remove('light', 'dark');
-  document.body.classList.add(theme)
-};
-onMounted(() => {
-  applyTheme(currentTheme.value);
-});
-watch(currentTheme, (theme) => {
-  applyTheme(theme);
-});
+  document.body.classList.add(theme);
+}
+onMounted(() => applyTheme(currentTheme.value));
+watch(currentTheme, (theme) => applyTheme(theme));
 
-applyTheme(currentTheme.value);
-// Idioma local
-
-
-
+// Props e Emits
 const props = defineProps({
   notificationsEnabled: Boolean,
   notificationEmail: String,
   notificationPhone: String,
 });
-
 const emit = defineEmits([
   'update:notificationsEnabled',
   'update:notificationEmail',
   'update:notificationPhone',
 ]);
 
+// Modelos de entrada
+type InputItem = { value: string; locked: boolean };
+const additionalEmails = ref<InputItem[]>([]);
+const additionalPhones = ref<InputItem[]>([]);
 
-const additionalEmails = ref<string[]>([]);
-const additionalPhones = ref<string[]>([]);
+// Exclusão inline
+const pendingEmailDeletion = ref<number | null>(null);
+const pendingPhoneDeletion = ref<number | null>(null);
 
-
+// Atualizações principais
 function updateNotifications(event: Event) {
-  const target = event.target as HTMLInputElement;
-  emit('update:notificationsEnabled', target.checked);
+  emit('update:notificationsEnabled', (event.target as HTMLInputElement).checked);
 }
 function updateEmail(event: Event) {
   emit('update:notificationEmail', (event.target as HTMLInputElement).value);
@@ -111,34 +116,59 @@ function updateEmail(event: Event) {
 function updatePhone(event: Event) {
   emit('update:notificationPhone', (event.target as HTMLInputElement).value);
 }
+
+// Emails
 function addEmail() {
-  additionalEmails.value.push('');
+  additionalEmails.value.push({ value: '', locked: false });
 }
-function removeEmail(index: number) {
-  const confirmed = window.confirm($t('settings.removeConfirmationEmail'));
-  if (confirmed) {
-    additionalEmails.value.splice(index, 1);
+function lockEmail(index: number) {
+  if (additionalEmails.value[index].value.trim()) {
+    additionalEmails.value[index].locked = true;
   }
 }
+function editEmail(index: number) {
+  additionalEmails.value[index].locked = false;
+}
+function askRemoveEmail(index: number) {
+  pendingEmailDeletion.value = index;
+}
+function cancelRemoveEmail() {
+  pendingEmailDeletion.value = null;
+}
+function confirmRemoveEmail(index: number) {
+  additionalEmails.value.splice(index, 1);
+  pendingEmailDeletion.value = null;
+}
+
+// Telefones
 function addPhone() {
-  additionalPhones.value.push('');
+  additionalPhones.value.push({ value: '', locked: false });
 }
-function removePhone(index: number) {
-  const confirmed = window.confirm($t('settings.removeConfirmationPhone'));
-  if (confirmed) {
-    additionalPhones.value.splice(index, 1);
+function lockPhone(index: number) {
+  if (additionalPhones.value[index].value.trim()) {
+    additionalPhones.value[index].locked = true;
   }
 }
-
+function editPhone(index: number) {
+  additionalPhones.value[index].locked = false;
+}
+function askRemovePhone(index: number) {
+  pendingPhoneDeletion.value = index;
+}
+function cancelRemovePhone() {
+  pendingPhoneDeletion.value = null;
+}
+function confirmRemovePhone(index: number) {
+  additionalPhones.value.splice(index, 1);
+  pendingPhoneDeletion.value = null;
+}
 </script>
-
 
 <style scoped>
 .setting-item {
   display: flex;
-  flex-direction: row;
-  gap: 8px;
   align-items: center;
+  gap: 8px;
   margin-bottom: 10px;
 }
 
@@ -150,13 +180,24 @@ function removePhone(index: number) {
 
 .setting-item input {
   flex: 1;
-  width: auto;
+  padding: 6px;
+}
+
+input[readonly] {
+  background-color: #f4f4f4;
+  color: #555;
+  border-color: #ccc;
 }
 
 .status-toggle {
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.actions {
+  display: flex;
+  gap: 4px;
 }
 
 .add-button {
@@ -168,21 +209,20 @@ function removePhone(index: number) {
   font-size: 14px;
   cursor: pointer;
   transition: background 0.2s;
-  flex-shrink: 0;
 }
 
 .add-button:hover {
   background: #0056b3;
 }
 
-.page-wrapper {
-  width: 100%;
-  max-width: 1200px;
-  /* largura máxima da "tela" */
-  margin: 0 auto;
-  /* centraliza horizontalmente */
-  padding: 20px;
-  /* espaço interno */
-  box-sizing: border-box;
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  color: #333;
 }
 </style>

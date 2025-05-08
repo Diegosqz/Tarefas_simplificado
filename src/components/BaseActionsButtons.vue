@@ -1,32 +1,37 @@
 <template>
   <div class="action-buttons">
-    <button class="save-button" @click="onSave" :disabled="!isFormValid">{{ $t('Save Settings') }}</button>
-    <button class="cancel-button" @click="onCancel">{{ $t('user.cancel') }}</button>
+    <button class="save-button" @click="onSave" :disabled="!isFormValid">
+      {{ $t('Save Settings') }}
+    </button>
+    <button class="cancel-button" @click="onCancel">
+      {{ $t('user.cancel') }}
+    </button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 
+// Props
+const { isFormValid } = defineProps<{ isFormValid: boolean }>();
+
+// Emits
 const emit = defineEmits<{
   (e: 'save'): void;
+  (e: 'cancel'): void; // Novo emit opcional
 }>();
-
-
-// Props do componente
-const { isFormValid } = defineProps<{ isFormValid: boolean }>();
 
 const router = useRouter();
 
-// Função para lidar com o clique no botão "Salvar"
+// Salvar e redirecionar
 function onSave() {
-  // Emitir evento para salvar configurações
   emit('save');
   router.push({ name: 'AboutView' });
 }
 
-// Função para lidar com o clique no botão "Cancelar"
+// Cancelar: emitir e redirecionar
 function onCancel() {
+  emit('cancel'); // Permite ao pai restaurar valores salvos, se necessário
   router.push({ name: 'AboutView' });
 }
 </script>
@@ -45,6 +50,7 @@ function onCancel() {
   padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
+  font-weight: bold;
 }
 
 .save-button {

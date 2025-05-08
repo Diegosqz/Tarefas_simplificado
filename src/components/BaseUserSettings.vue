@@ -24,32 +24,58 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { UserIcon, CalendarIcon, MailIcon } from 'lucide-vue-next';
 
-// Props
+// Tradução
+const { t } = useI18n();
+
+// Props recebidas do pai
 const props = defineProps<{
   userName: string;
   dn: string;
   email: string;
 }>();
 
-// Emits
+// Emit para atualizar valores no componente pai
 const emit = defineEmits<{
   (e: 'update:userName', value: string): void;
   (e: 'update:dn', value: string): void;
   (e: 'update:email', value: string): void;
 }>();
 
-// Refs locais para evitar mutação direta
+// Variáveis locais
 const localUserName = ref(props.userName);
 const localDn = ref(props.dn);
 const localEmail = ref(props.email);
 
-// Watchers para emitir atualizações ao pai
-watch(localUserName, (val) => emit('update:userName', val));
-watch(localDn, (val) => emit('update:dn', val));
-watch(localEmail, (val) => emit('update:email', val));
+// Carregar dados do localStorage
+onMounted(() => {
+  const storedName = localStorage.getItem('userName');
+  const storedDn = localStorage.getItem('dn');
+  const storedEmail = localStorage.getItem('email');
+
+  if (storedName) localUserName.value = storedName;
+  if (storedDn) localDn.value = storedDn;
+  if (storedEmail) localEmail.value = storedEmail;
+});
+
+// Watchers para salvar e emitir alterações
+watch(localUserName, (val) => {
+  emit('update:userName', val);
+  localStorage.setItem('userName', val);
+});
+
+watch(localDn, (val) => {
+  emit('update:dn', val);
+  localStorage.setItem('dn', val);
+});
+
+watch(localEmail, (val) => {
+  emit('update:email', val);
+  localStorage.setItem('email', val);
+});
 </script>
 
 <style scoped>
@@ -58,6 +84,7 @@ watch(localEmail, (val) => emit('update:email', val));
   flex-direction: row;
   gap: 8px;
   align-items: center;
+  margin-bottom: 12px;
 }
 
 .input-label {

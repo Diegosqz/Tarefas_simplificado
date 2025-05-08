@@ -7,11 +7,10 @@
           <div class="language-wrapper">
             <BaseTooltipButton label="Trocar idioma" @click="toggleLanguageMenu">
               <span class="current-language">
-                {{ getFlag(locale) }} <!-- ✅ Usa locale diretamente -->
+                {{ getFlag(locale) }}
                 <span class="arrow" :class="{ open: languageMenuVisible }">▾</span>
               </span>
             </BaseTooltipButton>
-
             <div v-if="languageMenuVisible" class="language-options">
               <span v-for="lang in otherLanguages" :key="lang" @click.stop="selectLanguage(lang)">
                 {{ getFlag(lang) }}
@@ -40,20 +39,18 @@
 
     <div class="settings-content">
       <div v-if="activeTab === 'notifications'">
-        <BaseNotificationSettings :icon-email="MailIcon" :icon-phone="PhoneIcon"
-          :notificationsEnabled="notificationsEnabled" :notificationEmail="notificationEmail"
+        <BaseNotificationSettings :notificationsEnabled="notificationsEnabled" :notificationEmail="notificationEmail"
           :notificationPhone="notificationPhone" @update:notificationsEnabled="notificationsEnabled = $event"
           @update:notificationEmail="notificationEmail = $event"
           @update:notificationPhone="notificationPhone = $event" />
       </div>
       <div v-if="activeTab === 'user'">
-        <BaseUserSettings :icon-name="UserIcon" :icon-dn="CalendarIcon" :icon-email="MailIcon" :userName="userName"
-          :dn="dn" :email="email" @update:userName="userName = $event" @update:dn="dn = $event"
-          @update:email="email = $event" />
+        <BaseUserSettings :userName="userName" :dn="dn" :email="email" @update:userName="userName = $event"
+          @update:dn="dn = $event" @update:email="email = $event" />
       </div>
     </div>
 
-    <BaseActionButtons :isFormValid="isFormValid" @save="saveSettings" />
+    <BaseActionButtons :isFormValid="isFormValid" @save="saveSettings" @cancel="restoreFromLocalStorage" />
   </div>
 </template>
 
@@ -61,7 +58,8 @@
 import { ref, computed, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useThemeStore } from '@/stores/theme';
-import { useLanguage } from '@/components/composable/useLanguage.ts'; // ✅ Importa o composable
+import { useLanguage } from '@/components/composable/useLanguage.ts';
+
 import {
   BellIcon,
   UserIcon,
@@ -75,7 +73,18 @@ import BaseUserSettings from '@/components/BaseUserSettings.vue';
 import BaseActionButtons from '@/components/BaseActionsButtons.vue';
 import BaseTooltipButton from '@/components/BaseTooltipButton.vue';
 
-// Navegação
+// Estado do formulário
+const notificationEmail = ref(localStorage.getItem('notificationEmail') || '');
+const notificationPhone = ref(localStorage.getItem('notificationPhone') || '');
+const userName = ref(localStorage.getItem('userName') || '');
+const dn = ref(localStorage.getItem('dn') || '');
+const email = ref(localStorage.getItem('email') || '');
+
+// Estado de interface
+const activeTab = ref<'notifications' | 'user'>('notifications');
+const notificationsEnabled = ref(true);
+
+// Router
 const router = useRouter();
 
 // Tema
@@ -94,7 +103,7 @@ watch(currentTheme, (theme) => {
   applyTheme(theme);
 });
 
-// ✅ Idioma centralizado
+// Idioma
 const {
   locale,
   changeLanguage,
@@ -107,31 +116,42 @@ function toggleLanguageMenu() {
   languageMenuVisible.value = !languageMenuVisible.value;
 }
 function selectLanguage(lang: string) {
-  changeLanguage(lang); // usa função centralizada
+  changeLanguage(lang);
   languageMenuVisible.value = false;
 }
 
-// Tabs e formulário
-const activeTab = ref<'notifications' | 'user'>('notifications');
-const notificationsEnabled = ref(true);
-const notificationEmail = ref('');
-const notificationPhone = ref('');
-const userName = ref('');
-const dn = ref('');
-const email = ref('');
-
+// Validação
 const isFormValid = computed(() =>
   !!userName.value && !!dn.value && !!email.value
 );
 
+// Função para salvar configurações
 function saveSettings() {
+  localStorage.setItem('notificationEmail', notificationEmail.value);
+  localStorage.setItem('notificationPhone', notificationPhone.value);
+  localStorage.setItem('userName', userName.value);
+  localStorage.setItem('dn', dn.value);
+  localStorage.setItem('email', email.value);
+
   alert(
     `${$t('settings.user.save')}:\n` +
     `${userName.value} - ${$t('settings.user.name')}\n` +
     `${dn.value} - ${$t('settings.user.birthdate')}\n` +
     `${email.value} - ${$t('settings.email')}`
   );
+
   router.push({ name: 'AboutView' });
+}
+
+// Função para restaurar dados salvos
+function restoreFromLocalStorage() {
+  notificationEmail.value = localStorage.getItem('notificationEmail') || '';
+  notificationPhone.value = localStorage.getItem('notificationPhone') || '';
+  userName.value = localStorage.getItem('userName') || '';
+  dn.value = localStorage.getItem('dn') || '';
+  email.value = localStorage.getItem('email') || '';
+
+  alert($t('settings.restored'));
 }
 </script>
 
