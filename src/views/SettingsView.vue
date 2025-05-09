@@ -50,7 +50,7 @@
       </div>
     </div>
 
-    <BaseActionButtons :isFormValid="isFormValid" @save="saveSettings" @cancel="restoreFromLocalStorage" />
+    <BaseActionButtons :isFormValid="isFormValid" @save="saveSettings" @cancel="cancelreturn" />
   </div>
 </template>
 
@@ -132,27 +132,23 @@ function saveSettings() {
   localStorage.setItem('userName', userName.value);
   localStorage.setItem('dn', dn.value);
   localStorage.setItem('email', email.value);
-
-  alert(
-    `${$t('settings.user.save')}:\n` +
-    `${userName.value} - ${$t('settings.user.name')}\n` +
-    `${dn.value} - ${$t('settings.user.birthdate')}\n` +
-    `${email.value} - ${$t('settings.email')}`
-  );
-
   router.push({ name: 'AboutView' });
 }
 
-// Função para restaurar dados salvos
-function restoreFromLocalStorage() {
-  notificationEmail.value = localStorage.getItem('notificationEmail') || '';
-  notificationPhone.value = localStorage.getItem('notificationPhone') || '';
-  userName.value = localStorage.getItem('userName') || '';
-  dn.value = localStorage.getItem('dn') || '';
-  email.value = localStorage.getItem('email') || '';
+function cancelreturn() {
+  router.push({ name: 'AboutView' });
 
-  alert($t('settings.restored'));
 }
+//Função para restaurar dados salvos
+//function restoreFromLocalStorage() {
+//notificationEmail.value = localStorage.getItem('notificationEmail') || '';
+//notificationPhone.value = localStorage.getItem('notificationPhone') || '';
+//userName.value = localStorage.getItem('userName') || '';
+//dn.value = localStorage.getItem('dn') || '';
+//email.value = localStorage.getItem('email') || '';
+//alert($t('settings.restored'));
+//router.push({ name: 'AboutView' });
+//}
 </script>
 
 <style scoped>

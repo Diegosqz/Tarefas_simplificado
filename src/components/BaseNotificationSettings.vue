@@ -2,10 +2,10 @@
   <div>
     <!-- Notificações -->
     <div class="setting-item">
-      <label for="Notificações">{{ $t('settings.notifications') }}:</label>
+      <label for="notifications">{{ $t('settings.notifications') }}:</label>
       <div class="status-toggle">
-        <span>{{ notificationsEnabled ? $t('settings.enabled') : $t('settings.disabled') }}</span>
-        <input id="notifications" type="checkbox" :checked="notificationsEnabled" @change="updateNotifications" />
+        <span>{{ notificationsToggle ? 'Ativado' : 'Desativado' }}</span>
+        <input id="notifications" type="checkbox" v-model="notificationsToggle" />
       </div>
     </div>
 
@@ -116,6 +116,12 @@ const emit = defineEmits([
   'update:notificationEmail',
   'update:notificationPhone',
 ]);
+
+// Notificações toggle
+const notificationsToggle = ref(props.notificationsEnabled);
+watch(notificationsToggle, (val) => {
+  emit('update:notificationsEnabled', val);
+});
 
 // Main email/phone state
 const mainEmail = ref(props.notificationEmail || '');

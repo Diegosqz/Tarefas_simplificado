@@ -26,13 +26,15 @@ const router = useRouter();
 // Salvar e redirecionar
 function onSave() {
   emit('save');
-  router.push({ name: 'AboutView' });
+  console.log('Botão Salvar clicado!');
+  router.replace({ name: 'AboutView' });
 }
 
 // Cancelar: emitir e redirecionar
 function onCancel() {
   emit('cancel'); // Permite ao pai restaurar valores salvos, se necessário
-  router.push({ name: 'AboutView' });
+  console.log('Botão Cancelar clicado!');
+  router.replace({ name: 'AboutView' });
 }
 </script>
 
